@@ -1,0 +1,24 @@
+{% if session.username %}
+<p>Welcome to your island {{ session.username }}</p>
+<br>
+<p>Here you will be able to manage and view your selections</p>
+
+
+<a href="/ggg">Link1</a>
+<br><br>
+<a href="/logout">Logout</a>
+
+
+
+
+
+
+{% else %}
+<form action="/login" method="POST">
+<p>User:<br>
+<input type="text" name="username"></p>
+<p>Password:<br>
+<input type="password" name="password"></p>
+<input type="submit" value="Login">
+</form>
+{% endif %}
