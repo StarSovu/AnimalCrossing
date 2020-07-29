@@ -4,7 +4,7 @@ tsoha 2020
 
 Application for users to create their own island and select Animal Crossing characters for their island.
 
-Each user has a username (unique) and password. Users can also name their island, which is different from the username and not necessarily unique. Each user can only have one island, and each island can have a maximum of 10 animals.
+Each user has a username (unique) and password. Users can also name their island, which is different from the username and not necessarily unique. Each user can have multiple islands (every island from the same user must have a different name), and each island can have a maximum of 10 animals.
 
 Only a user with admin rights can create and edit characters. All users can select and change characters for their own island. If the island is full and the user tries to add another character, they will get a message saying that they need to kick someone off their island before they can add another character. Users cannot have the same character multiple times, but multiple users can have the same character on their island.
 
@@ -19,20 +19,23 @@ There are also outfits, which users can give to animals on their island. Each an
 
 Application utlizes a database. In database there are tables:
 
-Users
+Users:
 Username - Password hash value - Rights(user/admin) - Visible (0/1)
 
-Outfits
+Outfits:
 Id - Outfit name - Visible (0/1)
 
-Personalities
+Personalities:
 Id - Personality - Visible (0/1)
 
-Species
+Species:
 Id - Species - Visible (0/1)
 
-Characters
-Character name - Species id - Birthday (MM/DD) - Personality id - Outfit id - Visible (0/1)
+Characters:
+Id - character name - Species id - Birthday (MM/DD) - Personality id - Outfit id (default outfit) - Visible (0/1)
 
-Islands
-Island name - User id - Character id - Outfit id - Visible (0/1)
+Islands:
+Id island name - User id - Visible (0/1)
+
+Character on island:
+Island id - Character id - Outfit id (outfit which the character wears on that specific island)
