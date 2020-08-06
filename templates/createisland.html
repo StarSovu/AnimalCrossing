@@ -1,9 +1,14 @@
 {% if session.username %}
-<p>Create your island, {{ session.username }}!</p>
+<p>Manage your islands, {{ session.username }}!</p>
 <br>
+<p>Your islands:</p>
+<br>
+{% for islandname in islands %}
+{{ islandname[0] }}<br>
+{% endfor %}
 <br>
 <form action="/addisland" method="POST">
-<p> Name your island: <br> <input type="text" name="islandname"></p>
+<p> Name a new island: <br> <input type="text" name="islandname"></p>
 <input type="submit" value="Create">
 </form>
 <br><br>

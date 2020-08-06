@@ -1,0 +1,23 @@
+<form action="/editpersonality" method="POST">
+<p>Rename a personality</p>
+<p>Current name:<br>
+
+{% for personalityname in personalities %}
+<input type="radio" name="old" value="{{  personalityname[0]  }}"> {{ personalityname[0] }}<br>
+{% endfor %}
+
+
+<p>New name:<br>
+<input type="text" name="new"></p>
+<input type="submit" value="Rename">
+</form>
+<br>
+<form action="/addpersonality" method="POST">
+<p>Add a new personality:<br>
+<input type="text" name="personality"></p>
+<input type="submit" value="Add">
+</form>
+<br><br>
+<a href="/editcharacters">Back to character editor</a>
+<br><br>
+<a href="/logout">Logout</a>

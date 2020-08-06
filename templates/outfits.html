@@ -1,0 +1,23 @@
+<form action="/editoutfit" method="POST">
+<p>Rename an outfit</p>
+<p>Current name:<br>
+
+{% for outfitname in outfits %}
+<input type="radio" name="old" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
+{% endfor %}
+
+
+<p>New name:<br>
+<input type="text" name="new"></p>
+<input type="submit" value="Rename">
+</form>
+<br>
+<form action="/addoutfit" method="POST">
+<p>Add a new outfit:<br>
+<input type="text" name="outfit"></p>
+<input type="submit" value="Add">
+</form>
+<br><br>
+<a href="/editcharacters">Back to character editor</a>
+<br><br>
+<a href="/logout">Logout</a>

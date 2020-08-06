@@ -1,0 +1,22 @@
+<p>Welcome to character editor {{ session.username }}!</p>
+<br>
+<p>List of existing personalities:</p>
+{% for personalityname in personalities %}
+{{ personalityname[0] }}<br>
+{% endfor %}
+<a href="/personalities">Edit</a>
+<br>
+<p>List of existing species:</p>
+{% for speciesname in species %}
+{{ speciesname[0] }}<br>
+{% endfor %}
+<a href="/species">Edit</a>
+<br>
+<p>List of existing outfits:</p>
+{% for outfitname in outfits %}
+{{ outfitname[0] }}<br>
+{% endfor %}
+<a href="/outfits">Edit</a>
+<br>
+<br>
+<a href="/logout">Logout</a>

@@ -1,0 +1,23 @@
+<form action="/editspecies" method="POST">
+<p>Rename a species</p>
+<p>Current name:<br>
+
+{% for speciesname in species %}
+<input type="radio" name="old" value="{{  speciesname[0]  }}"> {{ speciesname[0] }}<br>
+{% endfor %}
+
+
+<p>New name:<br>
+<input type="text" name="new"></p>
+<input type="submit" value="Rename">
+</form>
+<br>
+<form action="/addspecies" method="POST">
+<p>Add a new species:<br>
+<input type="text" name="species"></p>
+<input type="submit" value="Add">
+</form>
+<br><br>
+<a href="/editcharacters">Back to character editor</a>
+<br><br>
+<a href="/logout">Logout</a>

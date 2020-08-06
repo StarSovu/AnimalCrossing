@@ -4,12 +4,16 @@
 <br>
 <a href="/createisland">Create new island</a>
 <br>
-<a href="/user/{{ session.username }}">Go to your userpage</a>
+<a href="/user/{{ session.userid }}">Go to your userpage</a>
 <br><br>
 <a href="/logout">Logout</a>
 
 
 {% else %}
+{% if session.infotext %}
+<p> {{  session.infotext  }}</p>
+{% else %}
+{% endif %}
 <form action="/login" method="POST">
 <p>User:<br>
 <input type="text" name="username"></p>
