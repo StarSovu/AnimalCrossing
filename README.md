@@ -15,7 +15,7 @@ Päivitetään readme.md; Animal Crossing kuvaus ja ohjelman toimintaa tarkemmin
 
 Animal Crossing is a social simulation video game series by Nintendo. In Animal Crossing, the player character is a human who lives in a village inhabited by various anthropomorphic animals, carrying out various activities such as fishing, bug catching, and fossil hunting. The series is notable for its open-ended gameplay and extensive use of the video game console's internal clock and calendar to simulate real passage of time. (Description based on Wikipedia article.) This application is particularly based on the newest game in the series, Animal Crossing: New Horizons, in which the player lives on an island with up to ten animal villagers.
 
-This application is for users to create their own island and select their ideal roster of Animal Crossing characters for their island.
+This application is for users to create their own island and select their ideal roster of Animal Crossing characters for their island. Application can be tested at https://xxxxxx.herokuapp.com/
 
 Each user has a username (unique) and password. Users can name islands for themselves, not necessarily unique names (several users can have an island with the same name). Each user can have multiple islands, every island from the same user must have a different name, and each island can have a maximum of 10 animals. Same animal can be selected on the same island only once.
 (Not yet done! Limit the number of islands / user.)
@@ -25,7 +25,7 @@ Only a user with admin rights can create and edit characters. All users can sele
 (Not yet done!)
 Admin can hide users, islands, characters and character parameters.
 
-Characters have: name (unique), birthday (month and day), species, personality and outfit. Only user with admin rights can select birthday, species, personality and outfit for characters. (This not yet done!) Users can change the outfit for a character on a specific island. If the same animal is on multiple islands, it can have different outfit on different islands.
+Characters have: name (unique), birthday (month and day)(birthday not yet done!), species, personality and outfit. Only user with admin rights can select birthday (not yet done!), species, personality and outfit for characters. (This not yet done!) Users can change the outfit for a character on a specific island. If the same animal is on multiple islands, it can have different outfit on different islands.
 
 
 (This not yet done!) Any visitor can see the list of charactes and filter it by species and/or personality. Lists can be arranged alphabetically or by birthday. There is also a search function, which allows visitors to search for characters with specific names. Visitors can see for which islands each character is selected to.
@@ -58,7 +58,7 @@ characteronisland:
 island id- characterid - outfitid - visible (0/1)
 
 
-On the index.html site it is checked if user is logged in or not. If not, login and register possibilities are shown. Before login users need to register. Role 'admin' role is given directly in SQL, not by this application. Users automatically are given 'user' role. When registering it is checked that the username does not yet exists.
+On the index.html site it is checked if user is logged in or not. If not, login and register possibilities are shown. Before login users need to register. For user named 'admin' role 'admin' role is given directly in SQL, not by this application. Users automatically are given 'user' role. When registering it is checked that the username does not yet exists.
 
 After login user is directed to user's welcome page. From there user follows links to be able to view, create and edit their own islands. 
 

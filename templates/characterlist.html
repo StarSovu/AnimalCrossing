@@ -1,0 +1,6 @@
+<p>List of characters:</p>
+{% for charactername in characters %}
+<a href="/character/{{ charactername[1] }}">{{ charactername[0] }}</a><br>
+{% endfor %}
+<br>
+<a href="/">Back to front page</a>

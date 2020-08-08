@@ -1,0 +1,30 @@
+<p> Add a new character.</p>
+<form action="/createcharacter" method="POST">
+<p>Name:<br>
+<input type="text" name="name"></p>
+<br>
+
+<p>Select species:<br>
+
+{% for speciesname in species %}
+<input type="radio" name="species" value="{{  speciesname[0]  }}"> {{ speciesname[0] }}<br>
+{% endfor %}
+
+<p>Select personality:<br>
+
+{% for personalityname in personalities %}
+<input type="radio" name="personality" value="{{  personalityname[0]  }}"> {{ personalityname[0] }}<br>
+{% endfor %}
+
+
+<p>Select default outfit:<br>
+
+{% for outfitname in outfits %}
+<input type="radio" name="outfit" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
+{% endfor %}
+
+<input type="submit" value="Create">
+</form>
+<br>
+<a href="/admin">Back to admin page</a><br>
+<a href="/logout">Logout</a>

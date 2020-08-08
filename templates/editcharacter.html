@@ -1,0 +1,47 @@
+<p> Edit character. Note: You can only change one attribute (name, personality, species, default outfit) at once.</p>
+<p>Current name: {{ character }}</p><br>
+<form action="/editcharactername" method="POST">
+<input type="hidden" name="id" value="{{  characterid  }}">
+<p>New name:<br>
+<input type="text" name="new"></p>
+<input type="submit" value="Rename">
+</form>
+<br>
+<p>Current species: {{ species }}</p><br>
+<form action="/changecharacterspecies" method="POST">
+<input type="hidden" name="id" value="{{  characterid  }}">
+<p>Select new species:<br>
+
+{% for speciesname in specieslist %}
+<input type="radio" name="new" value="{{  speciesname[0]  }}"> {{ speciesname[0] }}<br>
+{% endfor %}
+
+<input type="submit" value="Change">
+</form>
+<br>
+<p>Current personality: {{ personality }}</p><br>
+<form action="/changecharacterpersonality" method="POST">
+<input type="hidden" name="id" value="{{  characterid  }}">
+<p>Select new personality:<br>
+
+{% for personalityname in personalitylist %}
+<input type="radio" name="new" value="{{  personalityname[0]  }}"> {{ personalityname[0] }}<br>
+{% endfor %}
+
+<input type="submit" value="Change">
+</form>
+<br>
+<p>Current default outfit: {{ outfit }}</p><br>
+<form action="/changecharacteroutfit" method="POST">
+<input type="hidden" name="id" value="{{  characterid  }}">
+<p>Select new outfit:<br>
+
+{% for outfitname in outfitlist %}
+<input type="radio" name="new" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
+{% endfor %}
+
+<input type="submit" value="Change">
+</form>
+<br>
+<a href="/admin">Back to admin page</a><br>
+<a href="/logout">Logout</a>
