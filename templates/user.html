@@ -1,9 +1,9 @@
-<p>This is the userpage for {{ user }}  id  {{ userid  }}</p>
+<p>This is the userpage for {{ user }}.</p>
 <br>
 <p>List of islands created by {{ user }}</p>
 <br>
 <hr>
 {% for islandname in islands %}
-{{ islandname[0] }}
+<a href="/island/{{ islandname[1] }}">{{ islandname[0] }}</a><br>
 <hr>
 {% endfor %}

@@ -35,15 +35,11 @@ def login():
     if usercheck == None:
      session["infotext"] = "Username does not exist."
      return redirect("/")
-     # TODO: hash
-     #else:
-     #  hash_value = user[0]
-     #  if check_password_hash(hash_value,password):
     else:
      sql = "SELECT password FROM users WHERE username=:username"
      result = db.session.execute(sql, {"username":username})
-     pwd = result.fetchone()[0]  
-     if password == pwd:
+     hash_value = result.fetchone()[0] 
+     if check_password_hash(hash_value,password):
       session["username"] = username
       sql = "SELECT id FROM users WHERE username=:username"
       result = db.session.execute(sql, {"username":username})
@@ -73,7 +69,6 @@ def logout():
     return redirect("/")
 
 @app.route("/register",methods=["POST"])
-#talleettaa vielä salasanat suoraan kantaan, pitää muuttaa HASH-tallennus
 #ei mitään ehtoja username (paitsi pitää olla uniikki) ja password, esim. tyhjä käy. Pitää lisätä.
 def register():
     username = request.form["username"]
@@ -84,8 +79,8 @@ def register():
     if user == None:
      hash_value = generate_password_hash(password)
      sql = "INSERT INTO users (username, password, role, visible) VALUES (:username, :password, 'user', 1)"
-     #db.session.execute(sql, {"username":username, "password":hash_value})
-     db.session.execute(sql, {"username":username, "password":password})
+     db.session.execute(sql, {"username":username, "password":hash_value})
+     #db.session.execute(sql, {"username":username, "password":password})
      db.session.commit()
      session["infotext"] = "q"
      del session["infotext"]   
@@ -101,7 +96,7 @@ def page(id):
     sql = "SELECT username FROM users WHERE id=:userid"
     result = db.session.execute(sql, {"userid":userid})
     user = result.fetchone()[0]
-    sql = "SELECT islandname FROM islands WHERE userid=:userid"
+    sql = "SELECT islandname, id FROM islands WHERE userid=:userid"
     result = db.session.execute(sql, {"userid":userid})
     islands = result.fetchall()
     return render_template("user.html", user=user, islands=islands, userid=userid)
@@ -110,7 +105,7 @@ def page(id):
 @app.route("/createisland")
 def createisland():
     userid = session["userid"]
-    sql = "SELECT islandname FROM islands WHERE userid=:userid"
+    sql = "SELECT islandname, id FROM islands WHERE userid=:userid"
     result = db.session.execute(sql, {"userid":userid})
     islands = result.fetchall()
     return render_template("createisland.html", islands=islands)
@@ -132,6 +127,158 @@ def addisland():
      return "You already have an island with this name."
      #TODO: ohjaus jonnekin
 
+
+@app.route("/island/<int:id>")
+def island(id):
+    islandid = id
+    sql = "SELECT islandname FROM islands WHERE id=:islandid AND visible=1"
+    result = db.session.execute(sql, {"islandid":islandid})
+    islandname = result.fetchone()[0]
+    sql = "SELECT userid FROM islands WHERE id=:islandid AND visible=1"
+    result = db.session.execute(sql, {"islandid":islandid})
+    userid = result.fetchone()[0]
+    sql = "SELECT username FROM users WHERE id=:userid"
+    result = db.session.execute(sql, {"userid":userid})
+    username = result.fetchone()[0]
+    sql = "SELECT characterid, charactername, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
+    result = db. session. execute(sql, {"islandid":islandid})
+    characters = result.fetchall()
+    return render_template("island.html", islandid=islandid, islandname=islandname, userid=userid, username=username, characters=characters)
+
+@app.route("/renameisland",methods=["POST"])
+def renameisland():
+    islandid = request.form["id"]
+    new = request.form["new"]
+    userid = session["userid"]
+    sql = "SELECT islandname FROM islands WHERE islandname=:new AND userid=:userid"
+    result = db.session.execute(sql, {"new":new, "userid":userid})
+    island = result.fetchone()
+    if island == None:
+     sql = "UPDATE islands SET islandname=:new WHERE id=:islandid"
+     db.session.execute(sql, {"new":new, "islandid":islandid})
+     db.session.commit()
+     return redirect("/createisland")
+    else:
+     return "You already have an island with this name."
+     #TODO: ohjaus jonnekin
+
+@app.route("/island/<int:id>/addcharacter")
+def islandaddcharacter(id):
+    islandid = id
+    userid = session["userid"] 
+    sql = "SELECT userid FROM islands WHERE id=:islandid AND visible=1"
+    result = db.session.execute(sql, {"islandid":islandid})
+    checkuserid = result.fetchone()[0]
+    if userid == checkuserid:
+     sql = "SELECT islandname FROM islands WHERE id=:islandid"
+     result = db.session.execute(sql, {"islandid":islandid})
+     islandname = result.fetchone()[0]
+     sql = "SELECT charactername FROM characters WHERE visible = 1"
+     result = db.session.execute(sql)
+     characters = result.fetchall()
+     sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
+     result = db. session. execute(sql, {"islandid":islandid})
+     currentcharacters = result.fetchall()
+     return render_template("addcharactertoisland.html", islandid=islandid, islandname=islandname, characters=characters, currentcharacters=currentcharacters)
+    else:
+     return "You don't have permission."
+
+@app.route("/addcharactertoisland", methods=["POST"])
+def addcharactertoisland():
+    islandid = request.form["id"]
+    character = request.form["character"]
+    sql = "SELECT id FROM characters WHERE charactername=:character"
+    result = db.session.execute(sql, {"character":character})
+    characterid = result.fetchone()[0]
+    sql = "SELECT characterid FROM characteronisland WHERE characterid=:characterid AND islandid=:islandid"
+    result = db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+    check = result.fetchone()
+    if check == None:
+     sql = "SELECT outfitid FROM characters WHERE id=:characterid"
+     result = db.session.execute(sql, {"characterid":characterid})
+     outfitid = result.fetchone()[0]
+     sql = "INSERT INTO characteronisland (islandid, characterid, outfitid, visible) VALUES (:islandid, :characterid, :outfitid, 1)"
+     db.session.execute(sql, {"islandid":islandid, "characterid":characterid, "outfitid":outfitid})
+     db.session.commit()
+     return redirect("/createisland")
+    else:
+     sql = "SELECT visible FROM characteronisland WHERE characterid=:characterid AND islandid=:islandid"
+     result = db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+     visible = result.fetchone()[0]
+     if visible == 0:
+      sql = "UPDATE characteronisland SET visible=1 WHERE characterid=:characterid AND islandid=:islandid"
+      db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+      db.session.commit()
+      return redirect("/createisland")
+     else:
+      return "This character is already on this island."
+
+@app.route("/island/<int:id>/changecharacteroutfit")
+def islandchangecharacteroutfit(id):
+    islandid = id
+    userid = session["userid"] 
+    sql = "SELECT userid FROM islands WHERE id=:islandid AND visible=1"
+    result = db.session.execute(sql, {"islandid":islandid})
+    checkuserid = result.fetchone()[0]
+    if userid == checkuserid:
+     sql = "SELECT islandname FROM islands WHERE id=:islandid AND visible=1"
+     result = db.session.execute(sql, {"islandid":islandid})
+     islandname = result.fetchone()[0]
+     sql = "SELECT charactername, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
+     result = db.session.execute(sql, {"islandid":islandid})
+     characters = result.fetchall()
+     sql = "SELECT outfitname FROM outfits WHERE visible=1"
+     result = db.session.execute(sql)
+     outfits = result.fetchall()
+     return render_template("changecharacteroutfitonisland.html", islandid=islandid, islandname=islandname, characters=characters, outfits=outfits)
+    else:
+     return "You don't have permission."
+
+@app.route("/changecharacteroutfitonisland", methods=["POST"])
+def changecharacteroutfitonisland():
+    islandid = request.form["id"]
+    character = request.form["character"]
+    outfit = request.form["outfit"]
+    sql = "SELECT id FROM characters WHERE charactername=:character"
+    result = db.session.execute(sql, {"character":character})
+    characterid = result.fetchone()[0]
+    sql = "SELECT id FROM outfits WHERE outfitname=:outfit"
+    result = db.session.execute(sql, {"outfit":outfit})
+    outfitid = result.fetchone()[0]
+    sql = "UPDATE characteronisland SET outfitid=:outfitid WHERE characterid=:characterid AND islandid=:islandid"
+    db.session.execute(sql, {"outfitid":outfitid, "characterid":characterid, "islandid":islandid})
+    db.session.commit()
+    return redirect("/createisland")
+
+@app.route("/island/<int:id>/removecharacter")
+def islandremovecharacter(id):
+    islandid = id
+    userid = session["userid"] 
+    sql = "SELECT userid FROM islands WHERE id=:islandid AND visible=1"
+    result = db.session.execute(sql, {"islandid":islandid})
+    checkuserid = result.fetchone()[0]
+    if userid == checkuserid:
+     sql = "SELECT islandname FROM islands WHERE id=:islandid AND visible=1"
+     result = db.session.execute(sql, {"islandid":islandid})
+     islandname = result.fetchone()[0]
+     sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
+     result = db.session.execute(sql, {"islandid":islandid})
+     characters = result.fetchall()
+     return render_template("removecharacterfromisland.html", islandid=islandid, islandname=islandname, characters=characters)
+    else:
+     return "You don't have permission."
+
+@app.route("/removecharacterfromisland", methods=["POST"])
+def removecharacterfromisland():
+    islandid = request.form["id"]
+    character = request.form["character"]
+    sql = "SELECT id FROM characters WHERE charactername=:character"
+    result = db.session.execute(sql, {"character":character})
+    characterid = result.fetchone()[0]
+    sql = "UPDATE characteronisland SET visible=0 WHERE characterid=:characterid AND islandid=:islandid"
+    db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+    db.session.commit()
+    return redirect("/createisland")
 
 @app.route("/admin")
 def admin():
@@ -478,8 +625,3 @@ def createcharacter():
      return redirect("/admin")
     else:
      return "A character with this name already exists."
-    
-
-@app.route("/island")
-def island():
-    return render_template("island.html")

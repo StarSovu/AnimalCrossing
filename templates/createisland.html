@@ -4,7 +4,7 @@
 <p>Your islands:</p>
 <br>
 {% for islandname in islands %}
-{{ islandname[0] }}<br>
+<a href="/island/{{ islandname[1] }}">{{ islandname[0] }}</a><br>
 {% endfor %}
 <br>
 <form action="/addisland" method="POST">

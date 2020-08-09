@@ -1,25 +1,39 @@
-{% if session.username %}
-<p>Welcome to your island {{ session.username }}</p>
+<p>This is island {{ islandname }} by <a href="/user/{{ userid }}">{{ username }}</a>.</p>
+
+<p>Characters on this island and their outfits:</p>
+{% for characterid in characters %}
+<a href="/character/{{ characterid[0] }}">{{ characterid[1] }}</a> wearing {{ characterid[2] }}<br>
+{% endfor %}
 <br>
-<p>Here you will be able to manage and view your selections</p>
 
+{% if session.username %}
+{% if session.username == username %}
 
-<a href="/ggg">Link1</a>
-<br><br>
-<a href="/logout">Logout</a>
+<br>
+<a href="/island/{{ islandid }}/addcharacter">Add a new character to your island</a>
+<br>
+<a href="/island/{{ islandid }}/removecharacter">Remove a character from your island</a>
+<br>
+<a href="/island/{{ islandid }}/changecharacteroutfit">Change a character's outfit</a>
+<br>
 
+<p>Rename your island:</p>
+<form action="/renameisland" method="POST">
+<input type="hidden" name="id" value="{{ islandid }}">
+<p>New name:<br>
+<input type="text" name="new"></p>
+<input type="submit" value="Rename">
+</form>
+<br>
 
-
-
-
+<a href="/createisland">Manage your islands</a><br>
 
 {% else %}
-<p> This page lets you see your own islands. Log in to view. </p>
-<form action="/login" method="POST">
-<p>User:<br>
-<input type="text" name="username"></p>
-<p>Password:<br>
-<input type="password" name="password"></p>
-<input type="submit" value="Login">
-</form>
 {% endif %}
+
+<a href="/logout">Logout</a><br>
+
+{% else %}
+{% endif %}
+
+<a href="/">Back to front page</a>

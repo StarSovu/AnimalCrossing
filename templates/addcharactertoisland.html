@@ -1,0 +1,22 @@
+Select a character you want to use on your island {{ islandname }}!
+
+<p>Characters currently on the island:</p>
+{% for charactername in currentcharacters %}
+{{ charactername[0] }}<br>
+{% endfor %}
+<br>
+
+<p>List of characters:</p>
+
+<form action="/addcharactertoisland" method="POST">
+<input type="hidden" name="id" value="{{  islandid  }}">
+{% for charactername in characters %}
+<input type="radio" name="character" value="{{  charactername[0]  }}"> {{ charactername[0] }}<br>
+{% endfor %}
+<input type="submit" value="Add">
+</form>
+<br>
+
+<a href="/island/{{ islandid }}">Back to island page</a><br>
+<a href="/">Back to front page</a><br>
+<a href="/logout">Logout</a>

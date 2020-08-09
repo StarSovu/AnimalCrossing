@@ -1,12 +1,12 @@
-<p>Welcome to character editor {{ session.username }}!</p>
+<p>Welcome to admin page {{ session.username }}!</p>
 <br>
 
 <p>Edit characters:</p>
 {% for charactername in characters %}
 <a href="/editcharacter/{{ charactername[1] }}">{{ charactername[0] }}</a><br>
 {% endfor %}
-
-<a href="/addcharacter">Add new</a>
+<br>
+<a href="/addcharacter">Add a new character</a>
 
 <p>List of existing personalities:</p>
 {% for personalityname in personalities %}

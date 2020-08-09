@@ -1,0 +1,19 @@
+<p>Change the outfit of a character on {{ islandname }}.</p>
+
+<form action="/changecharacteroutfitonisland" method="POST">
+<input type="hidden" name="id" value="{{  islandid  }}">
+<p>Select character:</p>
+{% for charactername in characters %}
+<input type="radio" name="character" value="{{  charactername[0]  }}"> {{ charactername[0] }} (currently wearing {{ charactername[1] }})<br>
+{% endfor %}
+<p>Select new outfit:</p>
+{% for outfitname in outfits %}
+<input type="radio" name="outfit" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
+{% endfor %}
+<input type="submit" value="Change">
+</form>
+<br>
+
+<a href="/island/{{ islandid }}">Back to island page</a><br>
+<a href="/">Back to front page</a><br>
+<a href="/logout">Logout</a>
