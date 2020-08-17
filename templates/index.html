@@ -1,3 +1,7 @@
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
 {% if session.username %}
 <p>Welcome {{ session.username }}!</p>
 <br>
@@ -5,8 +9,6 @@
 <a href="/createisland">Create new island</a>
 <br>
 <a href="/user/{{ session.userid }}">Go to your userpage</a>
-<br><br>
-<a href="/logout">Logout</a>
 
 
 {% else %}
@@ -32,3 +34,5 @@
 
 <br><br>
 <a href="/characterlist">View list of characters</a>
+
+{% endblock %}

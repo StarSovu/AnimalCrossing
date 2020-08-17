@@ -1,6 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
 <p>This is character {{ character }}</p><br>
 <p>Species: {{ species }}</p><br>
 <p>Personality: {{ personality }}</p><br>
 <p>Default outfit: {{ outfit }}</p><br>
-<br>
+
+<p>This character appears on the following islands:</p>
+{% for islandid in islands %}
+<a href="/island/{{ islandid[0] }}">{{ islandid[1] }}</a><br>
+{% endfor %}
+
+<br><br>
 <a href="/characterlist">Go to character list</a>
+
+{% endblock %}

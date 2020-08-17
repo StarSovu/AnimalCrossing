@@ -1,3 +1,7 @@
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
 <p>Remove a character from {{ islandname }}.</p>
 
 <form action="/removecharacterfromisland" method="POST">
@@ -11,5 +15,5 @@
 <br>
 
 <a href="/island/{{ islandid }}">Back to island page</a><br>
-<a href="/">Back to front page</a><br>
-<a href="/logout">Logout</a>
+
+{% endblock %}

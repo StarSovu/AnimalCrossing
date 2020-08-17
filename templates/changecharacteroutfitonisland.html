@@ -1,3 +1,8 @@
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
+
 <p>Change the outfit of a character on {{ islandname }}.</p>
 
 <form action="/changecharacteroutfitonisland" method="POST">
@@ -15,5 +20,5 @@
 <br>
 
 <a href="/island/{{ islandid }}">Back to island page</a><br>
-<a href="/">Back to front page</a><br>
-<a href="/logout">Logout</a>
+
+{% endblock %}

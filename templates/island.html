@@ -1,3 +1,7 @@
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
 <p>This is island {{ islandname }} by <a href="/user/{{ userid }}">{{ username }}</a>.</p>
 
 <p>Characters on this island and their outfits:</p>
@@ -31,9 +35,8 @@
 {% else %}
 {% endif %}
 
-<a href="/logout">Logout</a><br>
 
 {% else %}
 {% endif %}
 
-<a href="/">Back to front page</a>
+{% endblock %}

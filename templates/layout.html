@@ -1,0 +1,11 @@
+<!doctype html>
+<title>Animal Crossing, fantasy roster - {% block title %}{% endblock %}</title>
+<h1>Animal Crossing, fantasy roster</h1>
+<a href="/">Front page</a>
+<hr>
+{% block content %}{% endblock %}
+<hr>
+{% if session.username %}
+<a href="/logout">Logout</a>
+{% else %}
+{% endif %}
