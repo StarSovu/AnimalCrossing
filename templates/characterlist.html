@@ -2,9 +2,29 @@
 {% block title %}Etusivu{% endblock %}
 {% block content %}
 
-<p>List of characters:</p>
+{% if filter == "none" %}
+<p>List of characters :</p>
+{% else %}
+<p>List of characters of {{ filter }} {{ name }}:</p>
+{% endif %}
 {% for charactername in characters %}
 <a href="/character/{{ charactername[1] }}">{{ charactername[0] }}</a><br>
+{% endfor %}
+<br><br>
+{% if filter == "none" %}
+{% else %}
+<a href="/characterlist">Show all</a>
+<br><br>
+{% endif %}
+
+Filter by personality:<br>
+{% for personalityname in personalitylist %}
+<a href="/characterlist/personality/{{ personalityname[1] }}">{{ personalityname[0] }}</a><br>
+{% endfor %}
+<br>
+Filter by species:<br>
+{% for speciesname in specieslist %}
+<a href="/characterlist/species/{{ speciesname[1] }}">{{ speciesname[0] }}</a><br>
 {% endfor %}
 
 {% endblock %}

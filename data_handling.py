@@ -56,7 +56,7 @@ def logout():
 @app.route("/register",methods=["POST"])
 def register():
     un_min = 3
-    un_max = 15
+    un_max = 30
     pwd_min = 4
     pwd_max = 256
     username = request.form["username"]
@@ -106,37 +106,45 @@ def register():
 
 @app.route("/addisland",methods=["POST"])
 def addisland():
+    in_min = 1
     islandname = request.form["islandname"]
-    userid = session["userid"]
-    sql = "SELECT islandname FROM islands WHERE islandname=:islandname AND userid=:userid"
-    result = db.session.execute(sql, {"islandname":islandname, "userid":userid})
-    island = result.fetchone()
-    if island == None:
-        sql = "INSERT INTO islands (islandname, userid, visible) VALUES (:islandname, :userid, 1)"
-        db.session.execute(sql, {"islandname":islandname, "userid":userid})
-        db.session.commit()
-        return redirect("/createisland")
+    if len(islandname) < in_min:
+        return "You need to have a longer island name.Minumum length is "+str(in_min)
     else:
-        return "You already have an island with this name."
-        #TODO: ohjaus jonnekin
+        userid = session["userid"]
+        sql = "SELECT islandname FROM islands WHERE islandname=:islandname AND userid=:userid"
+        result = db.session.execute(sql, {"islandname":islandname, "userid":userid})
+        island = result.fetchone()
+        if island == None:
+            sql = "INSERT INTO islands (islandname, userid, visible) VALUES (:islandname, :userid, 1)"
+            db.session.execute(sql, {"islandname":islandname, "userid":userid})
+            db.session.commit()
+            return redirect("/createisland")
+        else:
+            return "You already have an island with this name."
+            #TODO: ohjaus jonnekin
 
 
 @app.route("/renameisland",methods=["POST"])
 def renameisland():
+    in_min = 1
     islandid = request.form["id"]
     new = request.form["new"]
-    userid = session["userid"]
-    sql = "SELECT islandname FROM islands WHERE islandname=:new AND userid=:userid"
-    result = db.session.execute(sql, {"new":new, "userid":userid})
-    island = result.fetchone()
-    if island == None:
-        sql = "UPDATE islands SET islandname=:new WHERE id=:islandid"
-        db.session.execute(sql, {"new":new, "islandid":islandid})
-        db.session.commit()
-        return redirect("/createisland")
+    if len(new) < in_min:
+        return "You need to have a longer island name. Minimum length is "+str(in_min)
     else:
-        return "You already have an island with this name."
-        #TODO: ohjaus jonnekin
+        userid = session["userid"]
+        sql = "SELECT islandname FROM islands WHERE islandname=:new AND userid=:userid"
+        result = db.session.execute(sql, {"new":new, "userid":userid})
+        island = result.fetchone()
+        if island == None:
+            sql = "UPDATE islands SET islandname=:new WHERE id=:islandid"
+            db.session.execute(sql, {"new":new, "islandid":islandid})
+            db.session.commit()
+            return redirect("/createisland")
+        else:
+            return "You already have an island with this name."
+            #TODO: ohjaus jonnekin
 
 
 @app.route("/user/<int:id>")
@@ -309,7 +317,51 @@ def characterlist():
     sql = "SELECT charactername, id FROM characters WHERE visible=1"
     result = db.session.execute(sql)
     characters = result.fetchall()
-    return render_template("characterlist.html", characters=characters)
+    filter = "none"
+    sql = "SELECT speciesname, id FROM species WHERE visible=1"
+    result = db.session.execute(sql)
+    specieslist = result.fetchall()
+    sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
+    result = db.session.execute(sql)
+    personalitylist = result.fetchall()
+    return render_template("characterlist.html", characters=characters, filter=filter, specieslist=specieslist, personalitylist=personalitylist)
+
+@app.route("/characterlist/species/<int:id>")
+def characterlistspecies(id):
+    speciesid = id
+    sql = "SELECT speciesname FROM species WHERE id=:speciesid AND visible=1"
+    result = db.session.execute(sql, {"speciesid":speciesid})
+    species = result.fetchone()[0]
+    sql = "SELECT charactername, id FROM characters WHERE visible=1 AND speciesid=:speciesid"
+    result = db.session.execute(sql, {"speciesid":speciesid})
+    characters = result.fetchall()
+    filter = "species"
+    sql = "SELECT speciesname, id FROM species WHERE visible=1"
+    result = db.session.execute(sql)
+    specieslist = result.fetchall()
+    sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
+    result = db.session.execute(sql)
+    personalitylist = result.fetchall()
+    return render_template("characterlist.html", characters=characters, filter=filter, name=species, specieslist=specieslist, personalitylist=personalitylist)
+
+@app.route("/characterlist/personality/<int:id>")
+def characterlistpersonality(id):
+    personalityid = id
+    sql = "SELECT personalityname FROM personalities WHERE id=:personalityid AND visible=1"
+    result = db.session.execute(sql, {"personalityid":personalityid})
+    personality = result.fetchone()[0]
+    sql = "SELECT charactername, id FROM characters WHERE visible=1 AND personalityid=:personalityid"
+    result = db.session.execute(sql, {"personalityid":personalityid})
+    characters = result.fetchall()
+    filter = "personality"
+    sql = "SELECT speciesname, id FROM species WHERE visible=1"
+    result = db.session.execute(sql)
+    specieslist = result.fetchall()
+    sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
+    result = db.session.execute(sql)
+    personalitylist = result.fetchall()
+    return render_template("characterlist.html", characters=characters, filter=filter, name=personality, specieslist=specieslist, personalitylist=personalitylist)
+
 
 @app.route("/character/<int:id>")
 def character(id):

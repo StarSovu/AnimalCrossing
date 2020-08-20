@@ -8,7 +8,10 @@
 <br>
 {% for islandname in islands %}
 <hr>
-<img src="/static/island.png" width="100"> <a href="/island/{{ islandname[1] }}">{{ islandname[0] }}</a><br>
+<a href="/island/{{ islandname[1] }}">
+<img src="/static/island.png" alt="alt koe" width="100">
+</a> <br>
+<a href="/island/{{ islandname[1] }}">{{ islandname[0] }}</a><br>
 {% endfor %}
 
 {% endblock %}
