@@ -22,9 +22,13 @@
 {% for outfitname in outfits %}
 <input type="radio" name="outfit" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
 {% endfor %}
+<br>
+<p> Select birthday (year is not visible for non-admins): </p>
+<input type="date" name="birthday">
 
 <input type="submit" value="Create">
 </form>
+
 <br>
 <a href="/admin">Back to admin page</a><br>
 <a href="/logout">Logout</a>

@@ -4,6 +4,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from os import getenv
 from db import db
 from app import app
+from datetime import date
+import calendar
 
 
 @app.route("/")
@@ -362,6 +364,22 @@ def characterlistpersonality(id):
     personalitylist = result.fetchall()
     return render_template("characterlist.html", characters=characters, filter=filter, name=personality, specieslist=specieslist, personalitylist=personalitylist)
 
+@app.route("/characterlist/month/<int:id>")
+def characterlistmonth(id):
+    monthid = id
+    month = calendar.month_name[monthid]
+    sql = "SELECT charactername, id FROM characters WHERE visible=1 AND EXTRACT(MONTH FROM birth)=:monthid"
+    result = db.session.execute(sql, {"monthid":monthid})
+    characters = result.fetchall()
+    filter = "month"
+    sql = "SELECT speciesname, id FROM species WHERE visible=1"
+    result = db.session.execute(sql)
+    specieslist = result.fetchall()
+    sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
+    result = db.session.execute(sql)
+    personalitylist = result.fetchall()
+    return render_template("characterlist.html", characters=characters, filter=filter, name=month, specieslist=specieslist, personalitylist=personalitylist)
+
 
 @app.route("/character/<int:id>")
 def character(id):
@@ -390,11 +408,18 @@ def character(id):
     sql = "SELECT outfitname FROM outfits WHERE id=:outfitid"
     result = db.session.execute(sql, {"outfitid":outfitid})
     outfit = result.fetchone()[0]
+    #birthday
+    sql = "SELECT birth FROM characters WHERE id=:characterid"
+    result = db.session.execute(sql, {"characterid":characterid})
+    month = result.fetchone()[0].strftime("%B")
+    sql = "SELECT EXTRACT(DAY FROM birth) FROM characters WHERE id=:characterid"
+    result = db.session.execute(sql, {"characterid":characterid})
+    day = int(result.fetchone()[0])
     #islands
     sql = "SELECT characteronisland.islandid, islands.islandname FROM islands, characteronisland WHERE characteronisland.characterid=:characterid AND characteronisland.islandid = islands.id AND characteronisland.visible = 1"
     result = db.session.execute(sql, {"characterid":characterid})
     islands = result.fetchall()
-    return render_template("character.html", character=character, personality=personality, species=species, outfit = outfit, islands = islands)
+    return render_template("character.html", character=character, personality=personality, species=species, outfit = outfit, month = month, day = day, islands = islands)
 
 
 

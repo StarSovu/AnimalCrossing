@@ -10,7 +10,7 @@
 <p>Current species: {{ species }}</p><br>
 <form action="/changecharacterspecies" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
-<p>Select new species:<br>
+Select new species:<br>
 
 {% for speciesname in specieslist %}
 <input type="radio" name="new" value="{{  speciesname[0]  }}"> {{ speciesname[0] }}<br>
@@ -22,7 +22,7 @@
 <p>Current personality: {{ personality }}</p><br>
 <form action="/changecharacterpersonality" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
-<p>Select new personality:<br>
+Select new personality:<br>
 
 {% for personalityname in personalitylist %}
 <input type="radio" name="new" value="{{  personalityname[0]  }}"> {{ personalityname[0] }}<br>
@@ -34,14 +34,23 @@
 <p>Current default outfit: {{ outfit }}</p><br>
 <form action="/changecharacteroutfit" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
-<p>Select new outfit:<br>
+Select new outfit:<br>
 
 {% for outfitname in outfitlist %}
 <input type="radio" name="new" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
 {% endfor %}
-
 <input type="submit" value="Change">
 </form>
+<br>
+
+<form action="/changecharacterbirthday" method="POST">
+<input type="hidden" name="id" value="{{  characterid  }}">
+<p>Current birthday: {{ birthday }}</p><br>
+Select new birthday:
+<input type="date" name="new">
+<input type="submit" value="Change">
+</form>
+
 <br>
 <a href="/admin">Back to admin page</a><br>
 <a href="/logout">Logout</a>

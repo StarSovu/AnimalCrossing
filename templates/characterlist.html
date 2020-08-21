@@ -3,10 +3,15 @@
 {% block content %}
 
 {% if filter == "none" %}
-<p>List of characters :</p>
+<p>List of characters:</p>
+{% else %}
+{% if filter == "month" %}
+<p>List of characters born in {{ name }}:</p>
 {% else %}
 <p>List of characters of {{ filter }} {{ name }}:</p>
 {% endif %}
+{% endif %}
+
 {% for charactername in characters %}
 <a href="/character/{{ charactername[1] }}">{{ charactername[0] }}</a><br>
 {% endfor %}
@@ -26,5 +31,19 @@ Filter by species:<br>
 {% for speciesname in specieslist %}
 <a href="/characterlist/species/{{ speciesname[1] }}">{{ speciesname[0] }}</a><br>
 {% endfor %}
+<br>
+Filter by month of birth:<br>
+<a href="/characterlist/month/1">January</a><br>
+<a href="/characterlist/month/2">February</a><br>
+<a href="/characterlist/month/3">March</a><br>
+<a href="/characterlist/month/4">April</a><br>
+<a href="/characterlist/month/5">May</a><br>
+<a href="/characterlist/month/6">June</a><br>
+<a href="/characterlist/month/7">July</a><br>
+<a href="/characterlist/month/8">August</a><br>
+<a href="/characterlist/month/9">September</a><br>
+<a href="/characterlist/month/10">October</a><br>
+<a href="/characterlist/month/11">November</a><br>
+<a href="/characterlist/month/12">December</a><br>
 
 {% endblock %}

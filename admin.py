@@ -206,7 +206,11 @@ def editcharacter(id):
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfitlist = result.fetchall()
-        return render_template("editcharacter.html", characterid=characterid, character=character, personality=personality, personalitylist=personalitylist, species=species, specieslist=specieslist, outfit = outfit, outfitlist = outfitlist)
+        #birthday
+        sql = "SELECT birth FROM characters WHERE id=:characterid"
+        result = db.session.execute(sql, {"characterid":characterid})
+        birthday = result.fetchone()[0]
+        return render_template("editcharacter.html", characterid=characterid, character=character, personality=personality, personalitylist=personalitylist, species=species, specieslist=specieslist, outfit=outfit, outfitlist=outfitlist, birthday=birthday)
     else:
         return "You don't have permission."
 
@@ -261,6 +265,15 @@ def changecharacteroutfit():
     db.session.commit()
     return redirect("/admin")
 
+@app.route("/changecharacterbirthday", methods=["POST"])
+def changecharacterbirthday():
+    id = request.form["id"]
+    new = request.form["new"]
+    sql = "UPDATE characters SET birth=:new WHERE id=:id"
+    db.session.execute(sql, {"new":new, "id":id})
+    db.session.commit()
+    return redirect("/admin")
+
 @app.route("/addcharacter")
 def addcharacter():
     userid = session["userid"]
@@ -290,7 +303,7 @@ def createcharacter():
     personality = request.form["personality"]
     species = request.form["species"]
     outfit = request.form["outfit"]
-    birthday = 101
+    birth = request.form["birthday"]
     sql = "SELECT charactername FROM characters WHERE charactername=:name"
     result = db.session.execute(sql, {"name":name})
     checkcharacter = result.fetchone()
@@ -307,8 +320,8 @@ def createcharacter():
         sql = "SELECT id FROM outfits WHERE outfitname=:outfit"
         result = db.session.execute(sql, {"outfit":outfit})
         outfitid = result.fetchone()[0]
-        sql = "INSERT INTO characters (charactername, personalityid, speciesid, outfitid, birthmmdd, visible) VALUES (:name, :personalityid, :speciesid, :outfitid, :birthday, 1)"
-        db.session.execute(sql, {"name":name, "personalityid":personalityid, "speciesid":speciesid, "outfitid":outfitid, "birthday":birthday})
+        sql = "INSERT INTO characters (charactername, personalityid, speciesid, outfitid, birth, visible) VALUES (:name, :personalityid, :speciesid, :outfitid, :birth, 1)"
+        db.session.execute(sql, {"name":name, "personalityid":personalityid, "speciesid":speciesid, "outfitid":outfitid, "birth":birth})
         db.session.commit()   
         return redirect("/admin")
     else:
