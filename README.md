@@ -5,6 +5,8 @@ Animal Crossing is a social simulation video game series by Nintendo. In Animal 
 
 This application is particularly based on the newest game in the series, Animal Crossing: New Horizons, in which the player lives on an island named by the player with up to ten animal villagers. The purpose of this application is to let users showcase their ideal character roster for islands.
 
+Application is available here: https://tsoha-animalcrossing.herokuapp.com/
+
 ## Usage
 
 ### Logging in / registering
@@ -20,7 +22,14 @@ The creator of an island can add new characters on an island, as well as remove 
 Other users and accounts which are not logged in are able to view islands, but they cannot edit islands which they did not create. Island pages are accessible by id numbers.
 
 ### Characters
-Characters from Animal Crossing are featured in this application. Each character has their own page with their information, which includes their name, personality, species, birthday and default outfit. All characters can be found in a character list.
+Characters from Animal Crossing are featured in this application. Each character has their own page with their information, which includes their name, personality, species, birthday and default outfit. Characters cannot be edited by regular users.
+
+All characters can be found in a character list. The character list can be filtered based on species, personality or month of birth, but only one of the three at a time.
+
+### Admin
+Users with admin rights can add and edit characters, as well as add new personalities, species and outfits. Admins have access to pages which are forbidden for regular users which allow doing these actions. Logging in as an admin redirects to an admin page.
+
+Giving admin rights to other users is currently not possible in this application.
 
 ## Testing
 The following accounts are available for testing:
@@ -43,5 +52,7 @@ The following database tables with the following fields are used in the applicat
 * Ability to remove characters/personalities/species/outfits for admins is not yet possible.
 * Certain actions currently redirect to the wrong page due to the correct page requiring a variable, such as the id of an island.
 * Trying to enter a forbidden page or forbidden information currently gives plain text with no links.
+* Admin pages are still plain-looking.
 * Issues with sessiontext (which is used as an error message if the user fails to log in or register successfully). This variable will eventually be replaced with something else.
 * Animal's page only lists island names, which can cause confusion if multiple users have created an island with the same name.
+* Characters can only be sorted in one order, which is when they were last edited. Possibilities to sort character list in other ways (such as alphabetically or in birthday order) would be better.
