@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}{{ islandname }} - Change character's outfit{% endblock %}
 {% block content %}
 
 
-<p>Change the outfit of a character on {{ islandname }}.</p>
+<p>Change the outfit of a character on <b>{{ islandname }}</b>.</p>
 
 <form action="/changecharacteroutfitonisland" method="POST">
 <input type="hidden" name="id" value="{{  islandid  }}">
-<p>Select character:</p>
+<p><b>Select character:</b></p>
 {% for charactername in characters %}
 <input type="radio" name="character" value="{{  charactername[0]  }}"> {{ charactername[0] }} (currently wearing {{ charactername[1] }})<br>
 {% endfor %}
-<p>Select new outfit:</p>
+<p><b>Select new outfit:</b></p>
 {% for outfitname in outfits %}
 <input type="radio" name="outfit" value="{{  outfitname[0]  }}"> {{ outfitname[0] }}<br>
 {% endfor %}

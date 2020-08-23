@@ -1,16 +1,15 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}User:{{ user }}{% endblock %}
 {% block content %}
 
-<p>This is the userpage for {{ user }}.</p>
+<p>This is the userpage for <b>{{ user }}</b>.</p>
 <br>
-<p>List of islands created by {{ user }}</p>
-<br>
+<p>List of islands created by {{ user }}:</p>
 {% for islandname in islands %}
 <hr>
 <a href="/island/{{ islandname[1] }}">
 <img src="/static/island.png" alt="alt koe" width="100">
-</a> <br>
+</a>
 <a href="/island/{{ islandname[1] }}">{{ islandname[0] }}</a><br>
 {% endfor %}
 

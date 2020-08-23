@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}Front page{% endblock %}
 {% block content %}
 
 {% if session.username %}
@@ -16,23 +16,29 @@
 <p> {{  session.infotext  }}</p>
 {% else %}
 {% endif %}
-<form action="/login" method="POST">
-<p>User:<br>
-<input type="text" name="username"></p>
-<p>Password:<br>
-<input type="password" name="password"></p>
+<center><div class="login"><form action="/login" method="POST">
+<b>Login</b><br>
+Username:<br>
+<input type="text" name="username"><br>
+Password:<br>
+<input type="password" name="password"><br>
 <input type="submit" value="Login">
-</form>
-<form action="/register" method="POST">
-<p> Register <br>
-<p> Username: <br> <input type="text" name="username"></p>
-<p>Password: <br> <input type="password" name="password"></p>
-<p>Rewrite password: <br> <input type="password" name="rewritepassword"></p>
+</form></div>
+<div class="login"><form action="/register" method="POST">
+<b>Register</b><br>
+Username:<br>
+<input type="text" name="username"><br>
+Password:<br>
+<input type="password" name="password"><br>
+Rewrite password:<br>
+<input type="password" name="rewritepassword"><br>
 <input type="submit" value="Register">
-</form>
+</form></div>
+</center>
 {% endif %}
 
 <br><br>
+
 <a href="/characterlist">View list of characters</a>
 
 {% endblock %}

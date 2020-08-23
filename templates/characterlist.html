@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}List of characters{% endblock %}
 {% block content %}
 
 {% if filter == "none" %}
-<p>List of characters:</p>
+<b>List of characters:</b><br>
 {% else %}
 {% if filter == "month" %}
 <p>List of characters born in {{ name }}:</p>
@@ -22,17 +22,17 @@
 <br><br>
 {% endif %}
 
-Filter by personality:<br>
+<b>Filter by personality:</b><br>
 {% for personalityname in personalitylist %}
 <a href="/characterlist/personality/{{ personalityname[1] }}">{{ personalityname[0] }}</a><br>
 {% endfor %}
 <br>
-Filter by species:<br>
+<b>Filter by species:</b><br>
 {% for speciesname in specieslist %}
 <a href="/characterlist/species/{{ speciesname[1] }}">{{ speciesname[0] }}</a><br>
 {% endfor %}
 <br>
-Filter by month of birth:<br>
+<b>Filter by month of birth:</b><br>
 <a href="/characterlist/month/1">January</a><br>
 <a href="/characterlist/month/2">February</a><br>
 <a href="/characterlist/month/3">March</a><br>

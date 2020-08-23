@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}{{ character }}{% endblock %}
 {% block content %}
 
-<p>This is character {{ character }}</p><br>
-<p>Species: {{ species }}</p><br>
-<p>Personality: {{ personality }}</p><br>
-<p>Default outfit: {{ outfit }}</p><br>
-<p>Birthday: {{ month }} {{ day }}</p><br>
-
-<p>This character appears on the following islands:</p>
+<b>{{ character }}</b><br>
+Species: {{ species }}<br>
+Personality: {{ personality }}<br>
+Default outfit: {{ outfit }}<br>
+Birthday: {{ month }} {{ day }}<br>
+<br>
+This character appears on the following islands:<br>
 {% for islandid in islands %}
 <a href="/island/{{ islandid[0] }}">{{ islandid[1] }}</a><br>
 {% endfor %}

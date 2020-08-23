@@ -1,0 +1,84 @@
+body {
+    margin: auto;
+    max-width: 45em;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    color: #B08009;
+    background: #60D480;
+}
+
+nav li {
+    display: inline-block;
+    padding: .7em 1em .5em;
+    background: white;
+    border-radius: .5em;
+    margin: .2em;
+}
+
+.header {
+    background: darkgreen;
+    font-weight: bold;
+    color: goldenrod;
+    padding: .1em .5em;
+    font-size: 1em;
+    border-radius: .4em;
+    margin-top: 1em;
+}
+
+.login {
+    
+    padding: .5em;
+    background: darkgreen;
+    color: goldenrod;
+    border-radius: .5em;
+    max-width: 15em;
+    display  : grid;
+    grid-template-columns: 15em;
+    grid-row-gap: .3em;
+    margin-bottom: 2em;
+    margin-left: 2em;
+    
+}
+
+.login label, input{
+    margin: auto 0;
+}
+
+.login #button {
+    grid-column-start: 2;
+    padding:5px;
+    border: none;
+    text-align: center;
+    width: 5em;
+    margin: auto 0 auto 5.5em;
+    background: tan;
+}
+
+.login #button:hover{
+    background: rgb(138, 119, 94);
+    color: blue;
+}
+
+nav ul {
+    padding: 0;
+    margin: .5em;
+    text-align: center;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.content {
+   background: white;
+   padding: 1.5em 2em;
+   border-radius: .5em
+}
+
+nav li a {
+    text-decoration: none;
+    color: #000;
+}
+
+nav li:hover {
+    background-color: rgb(226, 226, 226);
+}

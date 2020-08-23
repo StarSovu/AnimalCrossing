@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}Manage islands{% endblock %}
 {% block content %}
 
 {% if session.username %}
 <p>Manage your islands, {{ session.username }}!</p>
 <br>
-<p>Your islands:</p>
+Your islands:
 <br>
 {% for islandname in islands %}
 <a href="/island/{{ islandname[1] }}">{{ islandname[0] }}</a><br>
@@ -15,27 +15,11 @@
 <p> Name a new island: <br> <input type="text" name="islandname"></p>
 <input type="submit" value="Create">
 </form>
-<br><br>
-<a href="/">Back to start page.</a>
-<br>
-<a href="/logout">Logout</a>
 
 
 {% else %}
-<p>You need to log in in order to create an island!</p>
-<form action="/login" method="POST">
-<p>User:<br>
-<input type="text" name="username"></p>
-<p>Password:<br>
-<input type="password" name="password"></p>
-<input type="submit" value="Login">
-</form>
-<form action="/register" method="POST">
-<p> Register <br>
-<p> Username: <br> <input type="text" name="username"></p>
-<p>Password: <br> <input type="password" name="password"></p>
-<input type="submit" value="Register">
-</form>
+You need to log in in order to create an island!<br>
+Go to the front page to log in!
 {% endif %}
 
 {% endblock %}

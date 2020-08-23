@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}{{ islandname }} - Island by {{ username }}{% endblock %}
 {% block content %}
 
-<p>This is island {{ islandname }} by <a href="/user/{{ userid }}">{{ username }}</a>.</p>
+<p>This is island <b>{{ islandname }}</b> by <a href="/user/{{ userid }}">{{ username }}</a>.</p>
 
 <p>Characters on this island and their outfits:</p>
 {% for characterid in characters %}
-<a href="/character/{{ characterid[0] }}">{{ characterid[1] }}</a> wearing {{ characterid[2] }}<br>
+<b><a href="/character/{{ characterid[0] }}">{{ characterid[1] }}</a></b> wearing <b>{{ characterid[2] }}</b><br>
 {% endfor %}
 <br>
 
@@ -26,7 +26,7 @@
 <input type="hidden" name="id" value="{{ islandid }}">
 <p>New name:<br>
 <input type="text" name="new"></p>
-<input type="submit" value="Rename">
+<br><input type="submit" value="Rename">
 </form>
 <br>
 

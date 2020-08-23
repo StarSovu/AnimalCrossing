@@ -218,31 +218,37 @@ def islandaddcharacter(id):
 def addcharactertoisland():
     islandid = request.form["id"]
     character = request.form["character"]
-    sql = "SELECT id FROM characters WHERE charactername=:character"
-    result = db.session.execute(sql, {"character":character})
-    characterid = result.fetchone()[0]
-    sql = "SELECT characterid FROM characteronisland WHERE characterid=:characterid AND islandid=:islandid"
-    result = db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
-    check = result.fetchone()
-    if check == None:
-        sql = "SELECT outfitid FROM characters WHERE id=:characterid"
-        result = db.session.execute(sql, {"characterid":characterid})
-        outfitid = result.fetchone()[0]
-        sql = "INSERT INTO characteronisland (islandid, characterid, outfitid, visible) VALUES (:islandid, :characterid, :outfitid, 1)"
-        db.session.execute(sql, {"islandid":islandid, "characterid":characterid, "outfitid":outfitid})
-        db.session.commit()
-        return redirect("/createisland")
+    sql = "SELECT COUNT(*) FROM characteronisland WHERE islandid=:islandid AND visible=1"
+    result = db.session.execute(sql, {"islandid":islandid})
+    count = result.fetchone()[0]
+    if count == 10:
+        return "There are already 10 characters on this island. Remove one character to add more."
     else:
-        sql = "SELECT visible FROM characteronisland WHERE characterid=:characterid AND islandid=:islandid"
+        sql = "SELECT id FROM characters WHERE charactername=:character"
+        result = db.session.execute(sql, {"character":character})
+        characterid = result.fetchone()[0]
+        sql = "SELECT characterid FROM characteronisland WHERE characterid=:characterid AND islandid=:islandid"
         result = db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
-        visible = result.fetchone()[0]
-        if visible == 0:
-            sql = "UPDATE characteronisland SET visible=1 WHERE characterid=:characterid AND islandid=:islandid"
-            db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+        check = result.fetchone()
+        if check == None:
+            sql = "SELECT outfitid FROM characters WHERE id=:characterid"
+            result = db.session.execute(sql, {"characterid":characterid})
+            outfitid = result.fetchone()[0]
+            sql = "INSERT INTO characteronisland (islandid, characterid, outfitid, visible) VALUES (:islandid, :characterid, :outfitid, 1)"
+            db.session.execute(sql, {"islandid":islandid, "characterid":characterid, "outfitid":outfitid})
             db.session.commit()
             return redirect("/createisland")
         else:
-            return "This character is already on this island."
+            sql = "SELECT visible FROM characteronisland WHERE characterid=:characterid AND islandid=:islandid"
+            result = db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+            visible = result.fetchone()[0]
+            if visible == 0:
+                sql = "UPDATE characteronisland SET visible=1 WHERE characterid=:characterid AND islandid=:islandid"
+                db.session.execute(sql, {"characterid":characterid, "islandid":islandid})
+                db.session.commit()
+                return redirect("/createisland")
+            else:
+                return "This character is already on this island."
 
 @app.route("/island/<int:id>/changecharacteroutfit")
 def islandchangecharacteroutfit(id):
