@@ -276,7 +276,7 @@ def addcharacter():
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
         personalities = result.fetchall()
-        characters = sorted(personalities)
+        personalities = sorted(personalities)
         #species
         sql = "SELECT speciesname FROM species WHERE visible=1"
         result = db.session.execute(sql)
@@ -286,7 +286,7 @@ def addcharacter():
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfits = result.fetchall()
-        characters = sorted(characters)
+        outfits = sorted(outfits)
         return render_template("addcharacter.html", personalities=personalities, species=species, outfits = outfits)
     else:
         return render_template("nopermission.html", user="admins")
