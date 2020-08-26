@@ -366,13 +366,16 @@ def characterlistspecies(id):
     sql = "SELECT charactername, id FROM characters WHERE visible=1 AND speciesid=:speciesid"
     result = db.session.execute(sql, {"speciesid":speciesid})
     characters = result.fetchall()
+    characters = sorted(characters)
     filter = "species"
     sql = "SELECT speciesname, id FROM species WHERE visible=1"
     result = db.session.execute(sql)
     specieslist = result.fetchall()
+    specieslist = sorted(specieslist)
     sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
+    personalitylist = sorted(personalitylist)
     return render_template("characterlist.html", characters=characters, filter=filter, name=species, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/characterlist/personality/<int:id>")
@@ -384,13 +387,16 @@ def characterlistpersonality(id):
     sql = "SELECT charactername, id FROM characters WHERE visible=1 AND personalityid=:personalityid"
     result = db.session.execute(sql, {"personalityid":personalityid})
     characters = result.fetchall()
+    characters = sorted(characters)
     filter = "personality"
     sql = "SELECT speciesname, id FROM species WHERE visible=1"
     result = db.session.execute(sql)
     specieslist = result.fetchall()
+    specieslist = sorted(specieslist)
     sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
+    personalitylist = sorted(personalitylist)
     return render_template("characterlist.html", characters=characters, filter=filter, name=personality, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/characterlist/month/<int:id>")
@@ -400,13 +406,16 @@ def characterlistmonth(id):
     sql = "SELECT charactername, id FROM characters WHERE visible=1 AND EXTRACT(MONTH FROM birth)=:monthid"
     result = db.session.execute(sql, {"monthid":monthid})
     characters = result.fetchall()
+    characters = sorted(characters)
     filter = "month"
     sql = "SELECT speciesname, id FROM species WHERE visible=1"
     result = db.session.execute(sql)
     specieslist = result.fetchall()
+    specieslist = sorted(specieslist)
     sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
+    personalitylist = sorted(personalitylist)
     return render_template("characterlist.html", characters=characters, filter=filter, name=month, specieslist=specieslist, personalitylist=personalitylist)
 
 
