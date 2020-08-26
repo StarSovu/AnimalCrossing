@@ -5,18 +5,36 @@ from os import getenv
 from db import db
 from app import app
 from datetime import date
+from os import getenv
 import calendar
 
+app.secret_key = getenv("SECRET_KEY")
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+@app.errorhandler(400)
+def server_error(e):
+    return render_template('400.html'), 400
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(405)
+def page_not_found(e):
+    return render_template('405.html'), 405
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
+
 @app.route("/login",methods=["POST"])
 def login():
     username = request.form["username"]
     password = request.form["password"]
-    sql = "SELECT username FROM users WHERE username=:username"
+    sql = "SELECT username FROM users WHERE username=:username AND visible=1"
     result = db.session.execute(sql, {"username":username})
     usercheck = result.fetchone()
     if usercheck == None:
@@ -32,11 +50,13 @@ def login():
             result = db.session.execute(sql, {"username":username})
             userid = result.fetchone()[0]
             session["userid"] = userid
+            sql = "SELECT role FROM users WHERE username=:username"
+            result = db.session.execute(sql, {"username":username})
+            role = result.fetchone()[0]
+            session["role"] = role
+            #print (role)
             session["infotext"] = "q"
             del session["infotext"]
-            sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-            result = db.session.execute(sql, {"userid":userid})
-            role = result.fetchone()[0]
             if role == "admin":
                 return redirect("/admin")
             else:
@@ -44,13 +64,12 @@ def login():
         else:
             session["infotext"] = "Password not correct."
             return redirect("/")
-
-     
    
 @app.route("/logout")
 def logout():
     del session["username"]
     del session["userid"]
+    del session["role"]
     session["infotext"] = "q"
     del session["infotext"]
     return redirect("/")
@@ -105,13 +124,12 @@ def register():
                 session["infotext"] = "Username taken"
                 return redirect("/")
 
-
 @app.route("/addisland",methods=["POST"])
 def addisland():
     in_min = 1
     islandname = request.form["islandname"]
     if len(islandname) < in_min:
-        return "You need to have a longer island name.Minumum length is "+str(in_min)
+        return "You need to have a longer island name. Minimum length is "+str(in_min)
     else:
         userid = session["userid"]
         sql = "SELECT islandname FROM islands WHERE islandname=:islandname AND userid=:userid"
@@ -125,7 +143,6 @@ def addisland():
         else:
             return "You already have an island with this name."
             #TODO: ohjaus jonnekin
-
 
 @app.route("/renameisland",methods=["POST"])
 def renameisland():
@@ -148,24 +165,16 @@ def renameisland():
             return "You already have an island with this name."
             #TODO: ohjaus jonnekin
 
-
 @app.route("/user/<int:id>")
 def page(id):
     userid = id
-    sql = "SELECT id FROM users WHERE id=:userid"
+    sql = "SELECT username FROM users WHERE id=:userid"
     result = db.session.execute(sql, {"userid":userid})
-    checkid = result.fetchone()
-    if checkid == None:
-        return "This userpage does not exist."
-    else:
-        sql = "SELECT username FROM users WHERE id=:userid"
-        result = db.session.execute(sql, {"userid":userid})
-        user = result.fetchone()[0]
-        sql = "SELECT islandname, id FROM islands WHERE userid=:userid"
-        result = db.session.execute(sql, {"userid":userid})
-        islands = result.fetchall()
-        return render_template("user.html", user=user, islands=islands, userid=userid)
-
+    user = result.fetchone()[0]
+    sql = "SELECT islandname, id FROM islands WHERE userid=:userid"
+    result = db.session.execute(sql, {"userid":userid})
+    islands = result.fetchall()
+    return render_template("user.html", user=user, islands=islands, userid=userid)
 
 @app.route("/createisland")
 def createisland():
@@ -191,7 +200,6 @@ def island(id):
     result = db. session. execute(sql, {"islandid":islandid})
     characters = result.fetchall()
     return render_template("island.html", islandid=islandid, islandname=islandname, userid=userid, username=username, characters=characters)
-
 
 @app.route("/island/<int:id>/addcharacter")
 def islandaddcharacter(id):
@@ -317,21 +325,21 @@ def removecharacterfromisland():
     db.session.commit()
     return redirect("/createisland")
 
-
-
-
 @app.route("/characterlist")
 def characterlist():
     sql = "SELECT charactername, id FROM characters WHERE visible=1"
     result = db.session.execute(sql)
     characters = result.fetchall()
+    characters = sorted(characters)
     filter = "none"
     sql = "SELECT speciesname, id FROM species WHERE visible=1"
     result = db.session.execute(sql)
     specieslist = result.fetchall()
+    specieslist = sorted(specieslist)
     sql = "SELECT personalityname, id FROM personalities WHERE visible=1"
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
+    personalitylist = sorted(personalitylist)
     return render_template("characterlist.html", characters=characters, filter=filter, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/characterlist/species/<int:id>")

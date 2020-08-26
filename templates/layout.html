@@ -9,6 +9,14 @@
 </div>
 
 <a href="/">Front page</a>
+{% if session.username %}
+{% if session.role == "admin" %}
+ - <a href="/admin">Admin page</a>
+{% else %}
+{% endif %}
+{% else %}
+{% endif %}
+
 <hr>
 {% block content %}{% endblock %}
 <hr>

@@ -1,29 +1,33 @@
-Welcome to admin page {{ session.username }}!
+{% extends "layout.html" %}
+{% block title %}Admin page{% endblock %}
+{% block content %}
 
-<p>Edit characters:</p>
+Welcome to admin page {{ session.username }}!
+<br><br>
+
+<b>Edit characters:</b><br>
 {% for charactername in characters %}
 <a href="/editcharacter/{{ charactername[1] }}">{{ charactername[0] }}</a><br>
 {% endfor %}
 <br>
-<a href="/addcharacter">Add a new character</a>
+<a href="/addcharacter">Add a new character</a><br><br>
 
-<p>List of existing personalities:</p>
+<b>List of existing personalities:</b><br>
 {% for personalityname in personalities %}
 {{ personalityname[0] }}<br>
 {% endfor %}
-<a href="/personalities">Edit</a>
-<br>
-<p>List of existing species:</p>
+<a href="/personalities">Edit</a><br><br>
+
+<b>List of existing species:</b><br>
 {% for speciesname in species %}
 {{ speciesname[0] }}<br>
 {% endfor %}
-<a href="/species">Edit</a>
-<br>
-<p>List of existing outfits:</p>
+<a href="/species">Edit</a><br><br>
+
+<b>List of existing outfits:</b><br>
 {% for outfitname in outfits %}
 {{ outfitname[0] }}<br>
 {% endfor %}
-<a href="/outfits">Edit</a>
-<br>
-<br>
-<a href="/logout">Logout</a>
+<a href="/outfits">Edit</a><br><br>
+
+{% endblock %}

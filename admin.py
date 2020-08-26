@@ -3,13 +3,9 @@ from flask import redirect, render_template, request, session
 from db import db
 from app import app
 
-
 @app.route("/admin")
 def admin():
-    userid = session["userid"]
-    sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-    result = db.session.execute(sql, {"userid":userid})
-    role = result.fetchone()[0]
+    role = session["role"]
     if role == "admin":
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
@@ -25,21 +21,18 @@ def admin():
         characters = result.fetchall()
         return render_template("admin.html", personalities=personalities, species=species, outfits=outfits, characters=characters)
     else:
-        return "You don't have permission."
+        return render_template("nopermission.html")
 
 @app.route("/personalities")
 def personalities():
-    userid = session["userid"]
-    sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-    result = db.session.execute(sql, {"userid":userid})
-    role = result.fetchone()[0]
+    role = session["role"]
     if role == "admin":
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
         personalities = result.fetchall()
         return render_template("personalities.html", personalities=personalities)
     else:
-        return "You don't have permission."
+        return render_template("nopermission.html")
 
 @app.route("/addpersonality",methods=["POST"])
 def addpersonality():
@@ -75,17 +68,14 @@ def editpersonality():
 
 @app.route("/species")
 def species():
-    userid = session["userid"]
-    sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-    result = db.session.execute(sql, {"userid":userid})
-    role = result.fetchone()[0]
+    role = session["role"]
     if role == "admin":
         sql = "SELECT speciesname FROM species WHERE visible=1"
         result = db.session.execute(sql)
         species = result.fetchall()
         return render_template("species.html", species=species)
     else:
-        return "You don't have permission."
+        return render_template("nopermission.html")
 
 @app.route("/addspecies",methods=["POST"])
 def addspecies():
@@ -121,17 +111,14 @@ def editspecies():
 
 @app.route("/outfits")
 def outfits():
-    userid = session["userid"]
-    sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-    result = db.session.execute(sql, {"userid":userid})
-    role = result.fetchone()[0]
+    role = session["role"]
     if role == "admin":
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfits = result.fetchall()
         return render_template("outfits.html", outfits=outfits)
     else:
-        return "You don't have permission."
+        return render_template("nopermission.html")
 
 @app.route("/addoutfit",methods=["POST"])
 def addoutfit():
@@ -167,10 +154,7 @@ def editoutfit():
 
 @app.route("/editcharacter/<int:id>")
 def editcharacter(id):
-    userid = session["userid"]
-    sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-    result = db.session.execute(sql, {"userid":userid})
-    role = result.fetchone()[0]
+    role = session["role"]
     if role == "admin":
         characterid = id
         sql = "SELECT charactername FROM characters WHERE id=:characterid"
@@ -212,7 +196,7 @@ def editcharacter(id):
         birthday = result.fetchone()[0]
         return render_template("editcharacter.html", characterid=characterid, character=character, personality=personality, personalitylist=personalitylist, species=species, specieslist=specieslist, outfit=outfit, outfitlist=outfitlist, birthday=birthday)
     else:
-        return "You don't have permission."
+        return render_template("nopermission.html")
 
 @app.route("/editcharactername", methods=["POST"])
 def editcharactername():
@@ -276,10 +260,7 @@ def changecharacterbirthday():
 
 @app.route("/addcharacter")
 def addcharacter():
-    userid = session["userid"]
-    sql = "SELECT role FROM users WHERE id=:userid AND visible=1"
-    result = db.session.execute(sql, {"userid":userid})
-    role = result.fetchone()[0]
+    role = session["role"]
     if role == "admin":
         #personality
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
@@ -295,7 +276,7 @@ def addcharacter():
         outfits = result.fetchall()
         return render_template("addcharacter.html", personalities=personalities, species=species, outfits = outfits)
     else:
-        return "You don't have permission."
+        return render_template("nopermission.html")
 
 @app.route("/createcharacter", methods=["POST"])
 def createcharacter():

@@ -1,13 +1,17 @@
-<p> Edit character. Note: You can only change one attribute (name, personality, species, default outfit) at once.</p>
-<p>Current name: {{ character }}</p><br>
+{% extends "layout.html" %}
+{% block title %}Edit character {{ character }}{% endblock %}
+{% block content %}
+
+<p> Edit character. Note: You can only change one attribute (name, personality, species, default outfit, birthday) at once.</p>
+Current name: <b>{{ character }}</b><br><br>
 <form action="/editcharactername" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
-<p>New name:<br>
-<input type="text" name="new"></p>
+New name:<br>
+<input type="text" name="new">
 <input type="submit" value="Rename">
 </form>
 <br>
-<p>Current species: {{ species }}</p><br>
+Current species: <b>{{ species }}</b><br><br>
 <form action="/changecharacterspecies" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
 Select new species:<br>
@@ -19,7 +23,7 @@ Select new species:<br>
 <input type="submit" value="Change">
 </form>
 <br>
-<p>Current personality: {{ personality }}</p><br>
+Current personality: <b>{{ personality }}</b><br><br>
 <form action="/changecharacterpersonality" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
 Select new personality:<br>
@@ -31,7 +35,7 @@ Select new personality:<br>
 <input type="submit" value="Change">
 </form>
 <br>
-<p>Current default outfit: {{ outfit }}</p><br>
+Current default outfit: <b>{{ outfit }}</b><br><br>
 <form action="/changecharacteroutfit" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
 Select new outfit:<br>
@@ -43,14 +47,12 @@ Select new outfit:<br>
 </form>
 <br>
 
+Current birthday: {{ birthday }}<br><br>
 <form action="/changecharacterbirthday" method="POST">
 <input type="hidden" name="id" value="{{  characterid  }}">
-<p>Current birthday: {{ birthday }}</p><br>
 Select new birthday:
 <input type="date" name="new">
 <input type="submit" value="Change">
 </form>
 
-<br>
-<a href="/admin">Back to admin page</a><br>
-<a href="/logout">Logout</a>
+{% endblock %}
