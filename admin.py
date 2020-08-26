@@ -10,18 +10,22 @@ def admin():
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
         personalities = result.fetchall()
+        personalities = sorted(personalities)
         sql = "SELECT speciesname FROM species WHERE visible=1"
         result = db.session.execute(sql)
         species = result.fetchall()
+        species = sorted(species)
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfits = result.fetchall()
+        outfits = sorted(outfits)
         sql = "SELECT charactername, id FROM characters WHERE visible=1"
         result = db.session.execute(sql)
         characters = result.fetchall()
+        characters = sorted(characters)
         return render_template("admin.html", personalities=personalities, species=species, outfits=outfits, characters=characters)
     else:
-        return render_template("nopermission.html")
+        return render_template("nopermission.html", user="admins")
 
 @app.route("/personalities")
 def personalities():
@@ -30,9 +34,10 @@ def personalities():
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
         personalities = result.fetchall()
+        personalities = sorted(personalities)
         return render_template("personalities.html", personalities=personalities)
     else:
-        return render_template("nopermission.html")
+        return render_template("nopermission.html", user="admins")
 
 @app.route("/addpersonality",methods=["POST"])
 def addpersonality():
@@ -46,7 +51,7 @@ def addpersonality():
         db.session.commit()   
         return redirect("/personalities")
     else:
-        return "A personality with this name already exists."
+        return render_template("customerror.html", message="A personality with this name already exists.")
 
 @app.route("/editpersonality", methods=["POST"])
 def editpersonality():
@@ -64,7 +69,7 @@ def editpersonality():
         db.session.commit()
         return redirect("/personalities")
     else:
-        return "A personality with this name already exists."
+        return render_template("customerror.html", message="A personality with this name already exists.")
 
 @app.route("/species")
 def species():
@@ -73,9 +78,10 @@ def species():
         sql = "SELECT speciesname FROM species WHERE visible=1"
         result = db.session.execute(sql)
         species = result.fetchall()
+        species = sorted(species)
         return render_template("species.html", species=species)
     else:
-        return render_template("nopermission.html")
+        return render_template("nopermission.html", user="admins")
 
 @app.route("/addspecies",methods=["POST"])
 def addspecies():
@@ -89,7 +95,7 @@ def addspecies():
         db.session.commit()   
         return redirect("/species")
     else:
-        return "A species with this name already exists."
+        return render_template("customerror.html", message="A species with this name already exists.")
 
 @app.route("/editspecies", methods=["POST"])
 def editspecies():
@@ -107,7 +113,7 @@ def editspecies():
         db.session.commit()
         return redirect("/species")
     else:
-        return "A species with this name already exists."
+        return render_template("customerror.html", message="A species with this name already exists.")
 
 @app.route("/outfits")
 def outfits():
@@ -116,9 +122,10 @@ def outfits():
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfits = result.fetchall()
+        outfits = sorted(outfits)
         return render_template("outfits.html", outfits=outfits)
     else:
-        return render_template("nopermission.html")
+        return render_template("nopermission.html", user="admins")
 
 @app.route("/addoutfit",methods=["POST"])
 def addoutfit():
@@ -132,7 +139,7 @@ def addoutfit():
         db.session.commit()   
         return redirect("/outfits")
     else:
-        return "An outfit with this name already exists."
+        return render_template("customerror.html", message="An outfit with this name already exists.")
 
 @app.route("/editoutfit", methods=["POST"])
 def editoutfit():
@@ -150,7 +157,7 @@ def editoutfit():
         db.session.commit()
         return redirect("/outfits")
     else:
-        return "An outfit with this name already exists."
+        return render_template("customerror.html", message="An outfit with this name already exists.")
 
 @app.route("/editcharacter/<int:id>")
 def editcharacter(id):
@@ -170,6 +177,7 @@ def editcharacter(id):
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
         personalitylist = result.fetchall()
+        personalitylist = sorted(personalitylist)
         #species
         sql = "SELECT speciesid FROM characters WHERE id=:characterid"
         result = db.session.execute(sql, {"characterid":characterid})
@@ -180,6 +188,7 @@ def editcharacter(id):
         sql = "SELECT speciesname FROM species WHERE visible=1"
         result = db.session.execute(sql)
         specieslist = result.fetchall()
+        specieslist = sorted(specieslist)
         #defaultoutfit
         sql = "SELECT outfitid FROM characters WHERE id=:characterid"
         result = db.session.execute(sql, {"characterid":characterid})
@@ -190,13 +199,14 @@ def editcharacter(id):
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfitlist = result.fetchall()
+        outfitlist = sorted(outfitlist)
         #birthday
         sql = "SELECT birth FROM characters WHERE id=:characterid"
         result = db.session.execute(sql, {"characterid":characterid})
         birthday = result.fetchone()[0]
         return render_template("editcharacter.html", characterid=characterid, character=character, personality=personality, personalitylist=personalitylist, species=species, specieslist=specieslist, outfit=outfit, outfitlist=outfitlist, birthday=birthday)
     else:
-        return render_template("nopermission.html")
+        return render_template("nopermission.html", user="admins")
 
 @app.route("/editcharactername", methods=["POST"])
 def editcharactername():
@@ -211,7 +221,7 @@ def editcharactername():
         db.session.commit()
         return redirect("/admin")
     else:
-        return "A character with this name already exists."
+        return render_template("customerror.html", message="A character with this name already exists.")
 
 @app.route("/changecharacterspecies", methods=["POST"])
 def changecharacterspecies():
@@ -266,17 +276,20 @@ def addcharacter():
         sql = "SELECT personalityname FROM personalities WHERE visible=1"
         result = db.session.execute(sql)
         personalities = result.fetchall()
+        characters = sorted(personalities)
         #species
         sql = "SELECT speciesname FROM species WHERE visible=1"
         result = db.session.execute(sql)
         species = result.fetchall()
+        species = sorted(species)
         #defaultoutfit
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfits = result.fetchall()
+        characters = sorted(characters)
         return render_template("addcharacter.html", personalities=personalities, species=species, outfits = outfits)
     else:
-        return render_template("nopermission.html")
+        return render_template("nopermission.html", user="admins")
 
 @app.route("/createcharacter", methods=["POST"])
 def createcharacter():
@@ -306,4 +319,4 @@ def createcharacter():
         db.session.commit()   
         return redirect("/admin")
     else:
-        return "A character with this name already exists."
+        return render_template("customerror.html", message="A character with this name already exists.")

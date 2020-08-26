@@ -5,8 +5,8 @@
 <p>This is island <b>{{ islandname }}</b> by <a href="/user/{{ userid }}">{{ username }}</a>.</p>
 
 <p>Characters on this island and their outfits:</p>
-{% for characterid in characters %}
-<b><a href="/character/{{ characterid[0] }}">{{ characterid[1] }}</a></b> wearing <b>{{ characterid[2] }}</b><br>
+{% for charactername in characters %}
+<b><a href="/character/{{ charactername[1] }}">{{ charactername[0] }}</a></b> wearing <b>{{ charactername[2] }}</b><br>
 {% endfor %}
 <br>
 

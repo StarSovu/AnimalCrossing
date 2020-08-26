@@ -196,9 +196,10 @@ def island(id):
     sql = "SELECT username FROM users WHERE id=:userid"
     result = db.session.execute(sql, {"userid":userid})
     username = result.fetchone()[0]
-    sql = "SELECT characterid, charactername, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
+    sql = "SELECT charactername, characterid, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
     result = db. session. execute(sql, {"islandid":islandid})
     characters = result.fetchall()
+    characters = sorted(characters)
     return render_template("island.html", islandid=islandid, islandname=islandname, userid=userid, username=username, characters=characters)
 
 @app.route("/island/<int:id>/addcharacter")
@@ -215,12 +216,17 @@ def islandaddcharacter(id):
         sql = "SELECT charactername FROM characters WHERE visible = 1"
         result = db.session.execute(sql)
         characters = result.fetchall()
+        characters = sorted(characters)
         sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
         result = db. session. execute(sql, {"islandid":islandid})
         currentcharacters = result.fetchall()
+        currentcharacters = sorted(currentcharacters)
         return render_template("addcharactertoisland.html", islandid=islandid, islandname=islandname, characters=characters, currentcharacters=currentcharacters)
     else:
-        return "You don't have permission."
+        sql = "SELECT username FROM users WHERE id=:checkid"
+        result = db.session.execute(sql, {"checkid":checkuserid})
+        user = result.fetchone()[0]
+        return render_template("nopermission.html", user=user)
 
 @app.route("/addcharactertoisland", methods=["POST"])
 def addcharactertoisland():
@@ -230,7 +236,7 @@ def addcharactertoisland():
     result = db.session.execute(sql, {"islandid":islandid})
     count = result.fetchone()[0]
     if count == 10:
-        return "There are already 10 characters on this island. Remove one character to add more."
+        return render_template("customerror.html", message="There are already 10 characters on this island. Remove one character to add more.")
     else:
         sql = "SELECT id FROM characters WHERE charactername=:character"
         result = db.session.execute(sql, {"character":character})
@@ -256,7 +262,7 @@ def addcharactertoisland():
                 db.session.commit()
                 return redirect("/createisland")
             else:
-                return "This character is already on this island."
+                return render_template("customerror.html", message="This character is already on this island.")
 
 @app.route("/island/<int:id>/changecharacteroutfit")
 def islandchangecharacteroutfit(id):
@@ -272,12 +278,17 @@ def islandchangecharacteroutfit(id):
         sql = "SELECT charactername, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
         result = db.session.execute(sql, {"islandid":islandid})
         characters = result.fetchall()
+        characters = sorted(characters)
         sql = "SELECT outfitname FROM outfits WHERE visible=1"
         result = db.session.execute(sql)
         outfits = result.fetchall()
+        outfits = sorted(outfits)
         return render_template("changecharacteroutfitonisland.html", islandid=islandid, islandname=islandname, characters=characters, outfits=outfits)
     else:
-        return "You don't have permission."
+        sql = "SELECT username FROM users WHERE id=:checkid"
+        result = db.session.execute(sql, {"checkid":checkuserid})
+        user = result.fetchone()[0]
+        return render_template("nopermission.html", user=user)
 
 @app.route("/changecharacteroutfitonisland", methods=["POST"])
 def changecharacteroutfitonisland():
@@ -309,9 +320,13 @@ def islandremovecharacter(id):
         sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
         result = db.session.execute(sql, {"islandid":islandid})
         characters = result.fetchall()
+        characters = sorted(characters)
         return render_template("removecharacterfromisland.html", islandid=islandid, islandname=islandname, characters=characters)
     else:
-        return "You don't have permission."
+        sql = "SELECT username FROM users WHERE id=:checkid"
+        result = db.session.execute(sql, {"checkid":checkuserid})
+        user = result.fetchone()[0]
+        return render_template("nopermission.html", user=user)
 
 @app.route("/removecharacterfromisland", methods=["POST"])
 def removecharacterfromisland():
