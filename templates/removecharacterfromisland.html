@@ -6,7 +6,7 @@
 
 <form action="/removecharacterfromisland" method="POST">
 <input type="hidden" name="id" value="{{  islandid  }}">
-<p>Select character:</p>
+<b>Select character:</b><br>
 {% for charactername in characters %}
 <input type="radio" name="character" value="{{  charactername[0]  }}"> {{ charactername[0] }}<br>
 {% endfor %}

@@ -2,16 +2,15 @@
 {% block title %}{{ islandname }} - Add character{% endblock %}
 {% block content %}
 
-Select a character you want to use on your island {{ islandname }}!
+Select a character you want to use on your island {{ islandname }}!<br><br>
 
-<p>Characters currently on the island:</p>
+<b>Characters currently on the island:</b><br>
 {% for charactername in currentcharacters %}
 {{ charactername[0] }}<br>
 {% endfor %}
 <br>
 
-<p>List of characters:</p>
-
+<b>List of characters:</b><br>
 <form action="/addcharactertoisland" method="POST">
 <input type="hidden" name="id" value="{{  islandid  }}">
 {% for charactername in characters %}

@@ -9,7 +9,7 @@
 <input type="hidden" name="id" value="{{  islandid  }}">
 <p><b>Select character:</b></p>
 {% for charactername in characters %}
-<input type="radio" name="character" value="{{  charactername[0]  }}"> {{ charactername[0] }} (currently wearing {{ charactername[1] }})<br>
+<input type="radio" name="character" value="{{  charactername[0]  }}"> <b>{{ charactername[0] }}</b> (currently wearing <b>{{ charactername[1] }}</b>)<br>
 {% endfor %}
 <p><b>Select new outfit:</b></p>
 {% for outfitname in outfits %}
