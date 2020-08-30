@@ -314,8 +314,10 @@ def createcharacter():
         sql = "SELECT id FROM outfits WHERE outfitname=:outfit"
         result = db.session.execute(sql, {"outfit":outfit})
         outfitid = result.fetchone()[0]
-        sql = "INSERT INTO characters (charactername, personalityid, speciesid, outfitid, birth, visible) VALUES (:name, :personalityid, :speciesid, :outfitid, :birth, 1)"
-        db.session.execute(sql, {"name":name, "personalityid":personalityid, "speciesid":speciesid, "outfitid":outfitid, "birth":birth})
+        sql = "INSERT INTO characters (charactername, personalityid, speciesid, outfitid, birth, \
+            visible) VALUES (:name, :personalityid, :speciesid, :outfitid, :birth, 1)"
+        db.session.execute(sql, {"name":name, "personalityid":personalityid, "speciesid":speciesid, \
+            "outfitid":outfitid, "birth":birth})
         db.session.commit()   
         return redirect("/admin")
     else:

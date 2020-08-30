@@ -51,6 +51,4 @@ The following database tables with the following fields are used in the applicat
 ## Known problems
 * Ability to remove characters/personalities/species/outfits for admins is not yet possible.
 * Certain actions currently redirect to the wrong page due to the correct page requiring a variable, such as the id of an island.
-* Some error messages are still plain-looking and need to be changed.
-* Issues with sessiontext (which is used as an error message if the user fails to log in or register successfully). This variable will eventually be replaced with something else.
 * Animal's page only lists island names, which can cause confusion if multiple users have created an island with the same name.

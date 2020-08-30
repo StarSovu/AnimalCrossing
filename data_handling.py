@@ -38,8 +38,7 @@ def login():
     result = db.session.execute(sql, {"username":username})
     usercheck = result.fetchone()
     if usercheck == None:
-        session["infotext"] = "Username does not exist."
-        return redirect("/")
+        return render_template("customerror.html", message="Username does not exist.")
     else:
         sql = "SELECT password FROM users WHERE username=:username"
         result = db.session.execute(sql, {"username":username})
@@ -54,24 +53,18 @@ def login():
             result = db.session.execute(sql, {"username":username})
             role = result.fetchone()[0]
             session["role"] = role
-            #print (role)
-            session["infotext"] = "q"
-            del session["infotext"]
             if role == "admin":
                 return redirect("/admin")
             else:
                 return redirect("/")
         else:
-            session["infotext"] = "Password not correct."
-            return redirect("/")
+            return render_template("customerror.html", message="Password not correct.")
    
 @app.route("/logout")
 def logout():
     del session["username"]
     del session["userid"]
     del session["role"]
-    session["infotext"] = "q"
-    del session["infotext"]
     return redirect("/")
 
 @app.route("/register",methods=["POST"])
@@ -83,22 +76,22 @@ def register():
     username = request.form["username"]
     username_length = len(username)
     if username_length < un_min:
-        session["infotext"] = "Minimum length of username is "+str(un_min)
-        return redirect("/")
+        return render_template("customerror.html", message="Username entered is too short. \
+            Minimum length of username is "+str(un_min)+".")
     else:
         if username_length > un_max:
-            session["infotext"] = "Maximum length of username is "+str(un_max)
-            return redirect("/")
+            return render_template("customerror.html", message="Username entered is too long. \
+                Maximum length of username is "+str(un_max)+".")
         else:
             password = request.form["password"]
             password_length = len(password)
             if password_length < pwd_min:
-                session["infotext"] = "Minimum length of password is "+str(pwd_min)
-                return redirect("/")
+                return render_template("customerror.html", message="Password entered is too short. \
+                    Minimum length of password is "+str(pwd_min)+".")
             else:
                 if password_length > pwd_max:
-                    session["infotext"] = "Maximum length of password is "+str(pwd_max)
-                    return redirect("/")
+                    return render_template("customerror.html", message="Password entered is too \
+                        long. Maximum length of password is "+str(pwd_max)+".")
             check_password = request.form["rewritepassword"]
             sql = "SELECT password FROM users WHERE username=:username"
             result = db.session.execute(sql, {"username":username})
@@ -106,7 +99,8 @@ def register():
             if user == None:
                 if password == check_password:
                     hash_value = generate_password_hash(password)
-                    sql = "INSERT INTO users (username, password, role, visible) VALUES (:username, :password, 'user', 1)"
+                    sql = "INSERT INTO users (username, password, role, visible) \
+                        VALUES (:username, :password, 'user', 1)"
                     db.session.execute(sql, {"username":username, "password":hash_value})
                     db.session.commit()
                     session["username"] = username
@@ -114,22 +108,19 @@ def register():
                     result = db.session.execute(sql, {"username":username})
                     userid = result.fetchone()[0]
                     session["userid"] = userid
-                    session["infotext"] = "q"
-                    del session["infotext"]
                     return redirect("/")
                 else:
-                    session["infotext"] = "Password does not match"
-                    return redirect("/")
+                    return render_template("customerror.html", message="Password does not match.")
             else:
-                session["infotext"] = "Username taken"
-                return redirect("/")
+                return render_template("customerror.html", message="Username taken.")
 
 @app.route("/addisland",methods=["POST"])
 def addisland():
     in_min = 1
     islandname = request.form["islandname"]
     if len(islandname) < in_min:
-        return "You need to have a longer island name. Minimum length is "+str(in_min)
+        return render_template("customerror.html", \
+            message="You need to have a longer island name. Minimum length is "+str(in_min)+".")
     else:
         userid = session["userid"]
         sql = "SELECT islandname FROM islands WHERE islandname=:islandname AND userid=:userid"
@@ -141,8 +132,7 @@ def addisland():
             db.session.commit()
             return redirect("/createisland")
         else:
-            return "You already have an island with this name."
-            #TODO: ohjaus jonnekin
+            return render_template("customerror.html", message="You already have an island with this name.")
 
 @app.route("/renameisland",methods=["POST"])
 def renameisland():
@@ -162,8 +152,7 @@ def renameisland():
             db.session.commit()
             return redirect("/createisland")
         else:
-            return "You already have an island with this name."
-            #TODO: ohjaus jonnekin
+            return render_template("customerror.html", message="You already have an island with this name.")
 
 @app.route("/user/<int:id>")
 def page(id):
@@ -196,11 +185,14 @@ def island(id):
     sql = "SELECT username FROM users WHERE id=:userid"
     result = db.session.execute(sql, {"userid":userid})
     username = result.fetchone()[0]
-    sql = "SELECT charactername, characterid, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
+    sql = "SELECT charactername, characterid, outfitname FROM characteronisland, characters, outfits \
+        WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid \
+        AND outfits.id=characteronisland.outfitid "
     result = db. session. execute(sql, {"islandid":islandid})
     characters = result.fetchall()
     characters = sorted(characters)
-    return render_template("island.html", islandid=islandid, islandname=islandname, userid=userid, username=username, characters=characters)
+    return render_template("island.html", \
+        islandid=islandid, islandname=islandname, userid=userid, username=username, characters=characters)
 
 @app.route("/island/<int:id>/addcharacter")
 def islandaddcharacter(id):
@@ -217,11 +209,13 @@ def islandaddcharacter(id):
         result = db.session.execute(sql)
         characters = result.fetchall()
         characters = sorted(characters)
-        sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
+        sql = "SELECT charactername FROM characteronisland, characters WHERE \
+            islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
         result = db. session. execute(sql, {"islandid":islandid})
         currentcharacters = result.fetchall()
         currentcharacters = sorted(currentcharacters)
-        return render_template("addcharactertoisland.html", islandid=islandid, islandname=islandname, characters=characters, currentcharacters=currentcharacters)
+        return render_template("addcharactertoisland.html", \
+            islandid=islandid, islandname=islandname, characters=characters, currentcharacters=currentcharacters)
     else:
         sql = "SELECT username FROM users WHERE id=:checkid"
         result = db.session.execute(sql, {"checkid":checkuserid})
@@ -236,7 +230,8 @@ def addcharactertoisland():
     result = db.session.execute(sql, {"islandid":islandid})
     count = result.fetchone()[0]
     if count == 10:
-        return render_template("customerror.html", message="There are already 10 characters on this island. Remove one character to add more.")
+        return render_template("customerror.html", \
+            message="There are already 10 characters on this island. Remove one character to add more.")
     else:
         sql = "SELECT id FROM characters WHERE charactername=:character"
         result = db.session.execute(sql, {"character":character})
@@ -248,7 +243,8 @@ def addcharactertoisland():
             sql = "SELECT outfitid FROM characters WHERE id=:characterid"
             result = db.session.execute(sql, {"characterid":characterid})
             outfitid = result.fetchone()[0]
-            sql = "INSERT INTO characteronisland (islandid, characterid, outfitid, visible) VALUES (:islandid, :characterid, :outfitid, 1)"
+            sql = "INSERT INTO characteronisland (islandid, characterid, outfitid, visible) \
+                VALUES (:islandid, :characterid, :outfitid, 1)"
             db.session.execute(sql, {"islandid":islandid, "characterid":characterid, "outfitid":outfitid})
             db.session.commit()
             return redirect("/createisland")
@@ -275,7 +271,9 @@ def islandchangecharacteroutfit(id):
         sql = "SELECT islandname FROM islands WHERE id=:islandid AND visible=1"
         result = db.session.execute(sql, {"islandid":islandid})
         islandname = result.fetchone()[0]
-        sql = "SELECT charactername, outfitname FROM characteronisland, characters, outfits WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND outfits.id=characteronisland.outfitid "
+        sql = "SELECT charactername, outfitname FROM characteronisland, characters, outfits WHERE \
+            islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid AND \
+            outfits.id=characteronisland.outfitid "
         result = db.session.execute(sql, {"islandid":islandid})
         characters = result.fetchall()
         characters = sorted(characters)
@@ -283,7 +281,8 @@ def islandchangecharacteroutfit(id):
         result = db.session.execute(sql)
         outfits = result.fetchall()
         outfits = sorted(outfits)
-        return render_template("changecharacteroutfitonisland.html", islandid=islandid, islandname=islandname, characters=characters, outfits=outfits)
+        return render_template("changecharacteroutfitonisland.html", \
+            islandid=islandid, islandname=islandname, characters=characters, outfits=outfits)
     else:
         sql = "SELECT username FROM users WHERE id=:checkid"
         result = db.session.execute(sql, {"checkid":checkuserid})
@@ -317,11 +316,13 @@ def islandremovecharacter(id):
         sql = "SELECT islandname FROM islands WHERE id=:islandid AND visible=1"
         result = db.session.execute(sql, {"islandid":islandid})
         islandname = result.fetchone()[0]
-        sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid AND characteronisland.visible=1 AND characters.id=characterid"
+        sql = "SELECT charactername FROM characteronisland, characters WHERE islandid=:islandid \
+            AND characteronisland.visible=1 AND characters.id=characterid"
         result = db.session.execute(sql, {"islandid":islandid})
         characters = result.fetchall()
         characters = sorted(characters)
-        return render_template("removecharacterfromisland.html", islandid=islandid, islandname=islandname, characters=characters)
+        return render_template("removecharacterfromisland.html", \
+            islandid=islandid, islandname=islandname, characters=characters)
     else:
         sql = "SELECT username FROM users WHERE id=:checkid"
         result = db.session.execute(sql, {"checkid":checkuserid})
@@ -355,7 +356,8 @@ def characterlist():
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
     personalitylist = sorted(personalitylist)
-    return render_template("characterlist.html", characters=characters, filter=filter, specieslist=specieslist, personalitylist=personalitylist)
+    return render_template("characterlist.html", \
+        characters=characters, filter=filter, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/characterlist/species/<int:id>")
 def characterlistspecies(id):
@@ -376,7 +378,8 @@ def characterlistspecies(id):
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
     personalitylist = sorted(personalitylist)
-    return render_template("characterlist.html", characters=characters, filter=filter, name=species, specieslist=specieslist, personalitylist=personalitylist)
+    return render_template("characterlist.html", \
+        characters=characters, filter=filter, name=species, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/characterlist/personality/<int:id>")
 def characterlistpersonality(id):
@@ -397,7 +400,8 @@ def characterlistpersonality(id):
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
     personalitylist = sorted(personalitylist)
-    return render_template("characterlist.html", characters=characters, filter=filter, name=personality, specieslist=specieslist, personalitylist=personalitylist)
+    return render_template("characterlist.html", \
+        characters=characters, filter=filter, name=personality, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/characterlist/month/<int:id>")
 def characterlistmonth(id):
@@ -416,8 +420,8 @@ def characterlistmonth(id):
     result = db.session.execute(sql)
     personalitylist = result.fetchall()
     personalitylist = sorted(personalitylist)
-    return render_template("characterlist.html", characters=characters, filter=filter, name=month, specieslist=specieslist, personalitylist=personalitylist)
-
+    return render_template("characterlist.html", \
+        characters=characters, filter=filter, name=month, specieslist=specieslist, personalitylist=personalitylist)
 
 @app.route("/character/<int:id>")
 def character(id):
@@ -454,12 +458,12 @@ def character(id):
     result = db.session.execute(sql, {"characterid":characterid})
     day = int(result.fetchone()[0])
     #islands
-    sql = "SELECT characteronisland.islandid, islands.islandname FROM islands, characteronisland WHERE characteronisland.characterid=:characterid AND characteronisland.islandid = islands.id AND characteronisland.visible = 1"
+    sql = "SELECT characteronisland.islandid, islands.islandname FROM islands, characteronisland WHERE \
+        characteronisland.characterid=:characterid AND characteronisland.islandid = islands.id AND \
+        characteronisland.visible = 1"
     result = db.session.execute(sql, {"characterid":characterid})
     islands = result.fetchall()
-    return render_template("character.html", character=character, personality=personality, species=species, outfit = outfit, month = month, day = day, islands = islands)
-
-
-
-
+    return render_template("character.html", \
+        character=character, personality=personality, species=species, outfit = outfit, month = month, \
+        day = day, islands = islands)
 
