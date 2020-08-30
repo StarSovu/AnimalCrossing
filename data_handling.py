@@ -205,7 +205,9 @@ def islandaddcharacter(id):
         sql = "SELECT islandname FROM islands WHERE id=:islandid"
         result = db.session.execute(sql, {"islandid":islandid})
         islandname = result.fetchone()[0]
-        sql = "SELECT charactername FROM characters WHERE visible = 1"
+        sql = "SELECT characters.charactername, personalities.personalityname, species.speciesname \
+            FROM characters, species, personalities WHERE personalities.id=characters.personalityid \
+            AND species.id=characters.speciesid AND characters.visible = 1"
         result = db.session.execute(sql)
         characters = result.fetchall()
         characters = sorted(characters)

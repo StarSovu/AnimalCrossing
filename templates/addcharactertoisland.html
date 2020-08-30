@@ -15,7 +15,7 @@ Select a character you want to use on your island {{ islandname }}!
 <form action="/addcharactertoisland" method="POST">
 <input type="hidden" name="id" value="{{  islandid  }}">
 {% for charactername in characters %}
-<input type="radio" name="character" value="{{  charactername[0]  }}"> {{ charactername[0] }}<br>
+<input type="radio" name="character" value="{{  charactername[0]  }}"> <b>{{ charactername[0] }}</b> ({{ charactername[1] }} {{ charactername[2] }})<br>
 {% endfor %}
 <input type="submit" value="Add">
 </form>
