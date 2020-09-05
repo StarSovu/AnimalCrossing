@@ -31,11 +31,6 @@ Users with admin rights can add and edit characters, as well as add new personal
 
 Giving admin rights to other users is currently not possible in this application.
 
-## Testing
-The following accounts are available for testing:
-* Username: guest, password: password (regular user)
-* Username: admin, password: kakku (admin, allows testers to test adding/editing characters)
-
 ## Database
 The following database tables with the following fields are used in the application:
 
